@@ -50,7 +50,6 @@ workflows:
   build-deploy:
     jobs:
       - build:
-          context: circleci-IAM-keys
           filters:
             branches:
               only:
