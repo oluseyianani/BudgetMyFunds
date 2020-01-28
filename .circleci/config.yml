@@ -6,7 +6,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/laravel
   docker:
-    - image: circleci/php:7.1-apache-node-browsers-legacy
+    - image: circleci/php:7.2-stretch-node-browsers
 
 jobs:
   build:
@@ -50,7 +50,6 @@ workflows:
   build-deploy:
     jobs:
       - build:
-          context: circleci-IAM-keys
           filters:
             branches:
               only:
