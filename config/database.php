@@ -91,6 +91,17 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'testing' => [
+            'driver'    => 'pgsql',
+            'host'      => env('DB_TEST_HOST', 'localhost'),
+            'database'  => env('DB_TEST_DATABASE', 'budget_my_funds_test'),
+            'username'  => env('DB_TEST_USERNAME', 'root'),
+            'password'  => env('DB_TEST_PASSWORD', 'root'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
     ],
 
     /*
