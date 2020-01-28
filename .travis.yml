@@ -1,0 +1,27 @@
+os:
+- linux
+language: php
+php:
+- '7.2'
+services:
+- postgresql
+env:
+  global:
+  - CC_TEST_REPORTER_ID=6d1d2389d19dda26d84170e56c7f339b299782fb6fafc53e6e77540724e31b0e
+before_script:
+- cp .env.travis .env
+- psql -c 'create database budget_my_funds_test;' -U postgres
+- composer self-update
+- composer install --no-interaction
+- php artisan key:generate
+- php artisan migrate
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
+script:
+- vendor/bin/phpunit
+deploy:
+  provider: heroku
+  api_key:
+    secure: J20P5r/unvB9rW9X9kugAwslew+IVSpLKka1zgO22AUSTUgbmhCYsG1NSJ1JZx9z31UGKG+qjkFkW/Mjryi0C0p2+0uez/hXsbHT7er0oKQsdvJn3JMNK6dKHp68eo8UbEStJWVgR/20d4TiGYW9rrXdpUZnMQwICiQ5c5Qv/fEbFGFhIOJ9aXY8umEbD99g8Mitx4X2MbyxmzHiRolocMOw7OxxB4AITHq60OnE2UecZzokitXNi41dyf5oIJvbeH0/S62GvHlb5FkgSaGgn6400rvptlo1oPx2rHKy3HRQDOjaxqUVSob5+zMno+vtEArt74386APDV6h4LbpoMzGaYlV8IVd8pgGmhZgN2z/LTrRNvhqlssNCRmwKtowttzwhacWT90kgTf+c5JeGK4ybVnHNdcTZ7dB5uSoPINOBGRERAlnD1QGAV9T4r2oKfYPJTsl2S0D8zJ1Nk3A8UK5+PJ2H9fBBeZX/+e7xOaHTnXI+GArg7gVovZFy9oE86wB3risjs4adO1wlwW9gsp9ogm0Gp7YQvwvKO5MRDBVi9Rwt87dVAA6ALJhLQF59iGUa39cqamytzbxBjJ5unuMvKPbCil467SEYFZcCiq/TZnxKYZu5gQet/+LG9K3eFX/K6TdIepKnHNii1strpSVHUAwIYJ4k9mjO53lYOGU=

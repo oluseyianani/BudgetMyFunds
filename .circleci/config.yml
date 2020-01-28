@@ -4,9 +4,14 @@
 #
 version: 2
 defaults: &defaults
-  working_directory: ~/laravel
+  working_directory: ~/BudgetMyFunds
+  command: sudo ls
   docker:
     - image: circleci/php:7.2-stretch-node-browsers
+    - image: postgres:9.6
+      environment:
+        POSTGRES_USER: ubuntu
+        POSTGRES_DB: budget_my_funds_test
 
 jobs:
   build:
