@@ -10,10 +10,6 @@ services:
       working_dir: /application
       volumes:
         - .:/application
-      environment:
-        - POSTGRES_USER=root
-        - POSTGRES_PASSWORD=root
-        - POSTGRES_DB=budget-my-funds
       env_file:
         - ./.env
       ports:
