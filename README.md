@@ -1,78 +1,136 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+## Budget My Funds Application
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+[![Build Status](https://travis-ci.org/anasey01/BudgetMyFunds.svg?branch=master)](https://travis-ci.org/anasey01/BudgetMyFunds)
+[![Maintainability](https://api.codeclimate.com/v1/badges/e47bb498fd283c8d8b47/maintainability)](https://codeclimate.com/github/anasey01/BudgetMyFunds/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/e47bb498fd283c8d8b47/test_coverage)](https://codeclimate.com/github/anasey01/BudgetMyFunds/test_coverage)
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+An API implementation for Users willing to manage their finances
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The application API is hosted on Heroku and available on [here](http://core-api.budgetmyfunds.com)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Table of Contents
 
-## Learning Laravel
+  - Technologies
+  - Setup and Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Technologies
+The technologies used are:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* [PHP](http://www.php.net/) - PHP is a popular general-purpose scripting language that is especially suited to web development.
+* [Laravel](https://laravel.com/docs/6.x) - For web applications
+* [Twillo](https://www.twilio.com/docs/usage/api) - Twillo sends programable SMS.
 
-## Laravel Sponsors
+### Installation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### Required Softwares
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+BudgetMyFunds App requires some softwares and Installations to run
+
+- Git (https://git-scm.com/docs)
+- Docker (https://www.docker.com/)
+- Postico (https://eggerapps.at/postico/)
+
+The links above provide download and installation steps
+
+Install the dependencies and devDependencies and start the server.
+
+#### Codebase Setup
+
+1. Navigate to your preferred directory to clone the project
+
+```
+$ git clone https://github.com/anasey01/BudgetMyFunds.git
+
+```
+
+2. Navigate to the newly created project directory (BudgetMyFunds)
+
+```
+$ cd BudgetMyFunds
+
+```
+
+3. Create your .env and copy .env.example to .env, then Fill in your database variables
+
+```
+$ cp .env.example .env
+
+```
+
+4. Install all the required dependencies as well as dev depencencies
+
+```
+$ composer install
+
+```
+
+5. Confirm that you have docker installed
+
+```
+$ docker --version
+
+```
+
+6. Pull and Build docker containers
+
+```
+$ docker-compose up -d 
+
+```
+
+7. Confirm that all continers are up and running
+
+```
+$ docker-compose ps
+
+```
+
+Your app should be running on (localhost)[0.0.0.0:8081]
+
+####   Connecting to your Database on Docker via Postico
+
+1. Get the ip and port number associated with your postgres service
+
+```
+$ docker-compose ps
+
+```
+You should see an output similar to
+```
+          Name                         Command              State           Ports
+------------------------------------------------------------------------------------------
+budget-my-funds-php-fpm     /usr/sbin/php-fpm7.3 -O         Up      9000/tcp
+budget-my-funds-postgres    docker-entrypoint.sh postgres   Up      0.0.0.0:8084->5432/tcp
+budget-my-funds-webserver   nginx -g daemon off;            Up      0.0.0.0:8081->80/tcp
+```
+
+2. Open postico and add this connection details
+```
+Host 0.0.0.0
+Port 8084 (as seen on the port for the postgress container)
+User The value for DB_USERNAME defined in your .env
+Password The value for DB_PASSWORD defined in your .env
+Database  The value for DB_DATABASE defined in your .env
+```
+
+3. Your connection should be successful
+
+HAPPY CODING!!!
+
+Common docker commands
+ - Use `docker-compose start` command to restart all containers.
+ - Use `docker-compose stop` command to stop all containers.
+ - Use `docker start <container id>` to start a specific container.
+ - Use `docker stop <container id>` to stop a specific container.
+ - Use `docker images` command to view all docker images.
+ - Use `docker ps or docker ps -a` to view all containers. The -a flag means stopped containers are listed as well.
+ - Use `docker system prune -a to` remove all stopped containers and images at once.
+ - Use `docker rmi <image id> `or `docker rmi <image name>:<tag>` to remove a specific image.
+ - Use `docker rm <container id>` to remove a specific stopped container.
+ - Use `docker-compose exec <service-name> <command>` command to execute commands in a container, where service-name is the docker service (for an image/container) specified in the docker-compose.yml file. For example to execute the artisan command to clear laravel config cache for the php-fpm service we run docker-compose exec php-fpm php artisan config:clear. Other artisan commands are run similarly against the docker container containing our laravel app.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Thank you for the outstanding and collaborative work
+- [Fredrick Adegoke](https://github.com/Frediflexta)
