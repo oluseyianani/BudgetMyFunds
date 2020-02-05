@@ -1,12 +1,15 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
+use Exception;
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use App\Providers\RouteServiceProvider;
+use App\Http\Requests\CreateUserRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -21,15 +24,6 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
-
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
     /**
      * Create a new controller instance.
      *
@@ -37,36 +31,53 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        //
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param  array $data
+     * @return \App\Models\User
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        try {
+
+            return User::create($data);
+
+        } catch (Exception $e) {
+            return formatResponse(fetchErrorCode($e), get_class($e) . ": " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Registers a user
+     *
+     * @param App\Http\Request\CreateUserRequest $request
+     * @return json
+     */
+    public function register(CreateUserRequest $request)
+    {
+
+        $validated = $request->validated();
+
+        event(new Registered($user = $this->create($validated)));
+
+        return $this->registered($user)
+                ?: formatResponse(400, 'Unable to register user', false);
+
+    }
+
+    /**
+     * Generates token for the registered user
+     *
+     * @param App\Models\User $user
+     */
+    protected function registered(User $user)
+    {
+        $user->generateToken();
+
+        return formatResponse(201, 'Registered', true, $user->toArray());
     }
 }

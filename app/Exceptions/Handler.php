@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -39,17 +40,56 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-    /**
+     /**
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
+     * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
+
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+            $message = $exception->getMessage() ? $exception->getMessage() : "End point doesn't exist";
+            return formatResponse(404, $message);
+        }
+
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
+            $message = $exception->getMessage() ? $exception->getMessage() : "This endpoint or method does not exist";
+            return formatResponse(405, $message);
+        }
+
         return parent::render($request, $exception);
+    }
+
+     /**
+     * Convert a validation exception into a JSON response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Validation\ValidationException  $exception
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return formatResponse($exception->status, $exception->getMessage(), false, $this->transformErrors($exception));
+    }
+
+    /**
+     * Re-format validation error to return in apporitate format
+     *
+     * @param \Illuminate\Validation\ValidationException  $exception
+     * @return array $errors
+     */
+    private function transformErrors(ValidationException $exception)
+    {
+        $errors = [];
+        foreach ($exception->errors() as $field => $message) {
+           $errors[] = [
+               'field' => $field,
+               'error_message' => $message[0],
+           ];
+        }
+        return $errors;
     }
 }

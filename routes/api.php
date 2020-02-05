@@ -16,3 +16,16 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::group(['middleware' => 'api'], function () {
+    Route::post('/auth/register', 'Auth\RegisterController@register');
+    Route::get('email/verify/{id}', 'VerificationApiController@verify')->name('verificationapi.verify');
+    Route::get('email/resend', 'VerificationApiController@resend')->name('verificationapi.resend');
+
+    Route::middleware(['api', 'verify'])->group(function () {
+        Route::post('/auth/login', 'Auth\RegisterController@login');
+    });
+});
+
+
