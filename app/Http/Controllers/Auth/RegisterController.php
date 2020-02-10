@@ -43,9 +43,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-
             return User::create($data);
-
         } catch (Exception $e) {
             return formatResponse(fetchErrorCode($e), get_class($e) . ": " . $e->getMessage());
         }
@@ -61,12 +59,11 @@ class RegisterController extends Controller
     {
 
         $validated = $request->validated();
-
+        $validated['password'] = bcrypt($request['password']);
         event(new Registered($user = $this->create($validated)));
 
         return $this->registered($user)
                 ?: formatResponse(400, 'Unable to register user', false);
-
     }
 
     /**

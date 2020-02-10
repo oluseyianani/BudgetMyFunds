@@ -17,7 +17,9 @@ class VerifyApiEmail extends VerifyEmailBase
     protected function verificationUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'verificationapi.verify', Carbon::now()->addMinutes(60), ['id' => $notifiable->getKey()]
+            'verificationapi.verify',
+            Carbon::now()->addMinutes(60),
+            ['id' => $notifiable->getKey()]
         );
     }
 }

@@ -36,7 +36,7 @@ function fetchErrorCode($error)
 
     if (method_exists($error, 'getStatusCode')) {
         $errorCode =  $error->getStatusCode();
-    } else if (method_exists($error, 'getCode')) {
+    } elseif (method_exists($error, 'getCode')) {
         $errorCode =  $error->getCode();
     }
 

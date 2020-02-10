@@ -16,6 +16,7 @@ services:
     depends_on:
       - php
       - mysql
+      - redis
     networks:
       - laravel
 
@@ -52,3 +53,9 @@ services:
       - "9000:9000"
     networks:
       - laravel
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+        - 6379:6379

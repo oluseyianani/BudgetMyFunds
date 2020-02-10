@@ -33,7 +33,6 @@ class VerificationApiController extends Controller
     {
 
         try {
-
             $userID = $request['id'];
             $user = User::findOrFail($userID);
 
@@ -63,7 +62,6 @@ class VerificationApiController extends Controller
 
         if ($request->user()->hasVerifiedEmail()) {
             return formatResponse(400, 'This email has already been verified', false);
-
         }
         $request->user()->sendApiEmailVerificationNotification();
 
