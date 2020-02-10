@@ -63,6 +63,13 @@
         ],
         "lint:fix": [
             "./vendor/bin/phpcbf"
+        ],
+        "test": [
+            "vendor/bin/phpunit --debug --verbose --coverage-clover build/logs/clover.xml"
+        ],
+        "test-one": [
+            "vendor/bin/phpunit --filter"
         ]
+
     }
 }
