@@ -24,6 +24,11 @@
             <directory suffix=".php">./app</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-html" target="./report" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-clover" target="./coverage.xml"/>
+    </logging>
+
     <php>
         <server name="APP_ENV" value="testing"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
