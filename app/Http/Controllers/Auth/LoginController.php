@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Exception;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Http\Requests\CreateLoginRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-
-
-    use AuthenticatesUsers;
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -25,36 +19,22 @@ class LoginController extends Controller
     |
     */
 
-    /**
-     * Authenticates the user for access to the platform
-     *
-     * @param App\Http\Requests\CreateLoginRequest
-     */
-    public function login(CreateLoginRequest $request)
-    {
-
-        try {
-            if ($this->attemptLogin($request)) {
-                $user = $this->guard()->user();
-                $user->generateToken();
-
-                return formatResponse(200, 'Successfully logged in', true, $user);
-            }
-
-            return $this->sendApiFailedLoginResponse($request);
-        } catch (Exception $e) {
-            return formatResponse(fetchErrorCode($e), get_class($e) . ": " . $e->getMessage());
-        }
-    }
+    use AuthenticatesUsers;
 
     /**
-     * Sends an API response on failed login attempt
+     * Where to redirect users after login.
      *
-     * @param App\Http\Requests\Request $request
-     * @return json
+     * @var string
      */
-    public function sendApiFailedLoginResponse(Request $request)
+    protected $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        return formatResponse(400, 'Email or Password Invalid', false);
+        $this->middleware('guest')->except('logout');
     }
 }
