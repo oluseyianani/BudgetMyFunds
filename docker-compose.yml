@@ -1,35 +1,74 @@
-###############################################################################
-#                          Generated on phpdocker.io                          #
-###############################################################################
-version: "3.1"
+version: '3'
+
+networks:
+  laravel:
+
 services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "8080:80"
+    working_dir: /application
+    volumes:
+      - .:/application
+      - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+      - redis
+      - sqlite3
+    networks:
+      - laravel
 
-    postgres:
-      image: postgres:11.1-alpine
-      container_name: budget-my-funds-postgres
-      working_dir: /application
-      volumes:
-        - .:/application
-      env_file:
-        - ./.env
-      ports:
-        - "8084:5432"
+  mysql:
+    image: mysql:5.7.22
+    container_name: mysql
+    working_dir: /application
+    volumes:
+      - .:/application
+    ports:
+      - "13306:3306"
+    environment:
+      MYSQL_DATABASE: budget_my_funds
+      MYSQL_USER: budgetmyfunds
+      MYSQL_PASSWORD: budgetmyfunds
+      MYSQL_ROOT_PASSWORD: budgetmyfunds
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+      XDEBUG_CONFIG: remote_host=172.17.0.1 #your docker network ip.
+    env_file:
+      - ./.env
+    networks:
+      - laravel
 
-    webserver:
-      image: nginx:alpine
-      container_name: budget-my-funds-webserver
-      working_dir: /application
-      volumes:
-          - .:/application
-          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      ports:
-       - "8081:80"
+  php:
+    build:
+      context: .
+      dockerfile: ./phpdocker/php/Dockerfile
+    container_name: php
+    working_dir: /application
+    volumes:
+      - .:/application
+      - ./phpdocker/php/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+    ports:
+      - "9000:9000"
+    networks:
+      - laravel
 
-    php-fpm:
-      build: phpdocker/php-fpm
-      container_name: budget-my-funds-php-fpm
-      working_dir: /application
-      volumes:
-        - .:/application
-        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+        - 6379:6379
 
+  sqlite3:
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
+    container_name: sqlite3
+    working_dir: /application
+    volumes:
+      - .:/application
+    ports:
+      - "43306:4306"
