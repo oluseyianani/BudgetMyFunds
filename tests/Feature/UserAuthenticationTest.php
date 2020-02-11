@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+// use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UserAuthenticationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +30,7 @@ class UserAuthenticationTest extends TestCase
 
     public function testUserRegistration()
     {
-        $response = $this->getResponse('POST','api/v1/auth/register', $this->data);
+        $response = $this->getResponse('POST', 'api/v1/auth/register', $this->data);
         $response->assertStatus(201);
     }
 }
