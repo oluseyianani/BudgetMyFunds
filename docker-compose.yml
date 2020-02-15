@@ -25,6 +25,7 @@ services:
     image: mysql:5.7.22
     container_name: mysql
     working_dir: /application
+    tty: true
     volumes:
       - .:/application
     ports:
@@ -36,7 +37,6 @@ services:
       MYSQL_ROOT_PASSWORD: budgetmyfunds
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
-      XDEBUG_CONFIG: remote_host=172.17.0.1 #your docker network ip.
     env_file:
       - ./.env
     networks:

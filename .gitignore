@@ -15,4 +15,5 @@ yarn-error.log
 /report
 build/
 .env.testing
-
+.idea
+.vscode
