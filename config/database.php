@@ -91,11 +91,11 @@ return [
         ],
 
         'testing' => [
-            'driver'    => 'pgsql',
+            'driver'    => 'mysql',
             'host'      => env('DB_TEST_HOST', 'localhost'),
             'database'  => env('DB_TEST_DATABASE', 'budget_my_funds_test'),
-            'username'  => env('DB_TEST_USERNAME', 'root'),
-            'password'  => env('DB_TEST_PASSWORD', 'root'),
+            'username'  => env('DB_TEST_USERNAME', 'budgetmyfunds'),
+            'password'  => env('DB_TEST_PASSWORD', 'budgetmyfunds'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
