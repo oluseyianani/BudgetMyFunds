@@ -1,0 +1,144 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "BudgetMyFunds API",
+        "description": "BudgetMyFunds App API Documentation",
+        "version": "1.0.0"
+    },
+    "basePath": "/api/v1",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "login a user",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "user's email",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "john.doe@email.com"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "Users password",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            }
+                        },
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "422": {
+                        "description": "Invalid email or passowrd"
+                    },
+                    "201": {
+                        "description": "Successfully logged in"
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Registers a user",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "user's email",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "john.doe@email.com"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "body",
+                        "description": "The user's phone number",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "phone_number": {
+                                    "type": "string",
+                                    "example": "+2348011111111111"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "Users password. Minimum eight characters, at least one letter and one number",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            }
+                        },
+                        "type": "integer"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "body",
+                        "description": "Users confirm password. Minimum eight characters, at least one letter and one number",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "password_confirmation": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "422": {
+                        "description": "Invalid email or passowrd"
+                    },
+                    "201": {
+                        "description": "Registered"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
