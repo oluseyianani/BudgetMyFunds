@@ -17,13 +17,6 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'App\Http\Controllers';
 
     /**
-     * The path to the "home" route for your application.
-     *
-     * @var string
-     */
-    public const HOME = '/home';
-
-    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void
@@ -72,9 +65,24 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+        $this->withVersions("api.php", function ($namespace, $routes) {
+            Route::prefix('api')->middleware('api')->namespace($namespace)->group($routes);
+        });
+    }
+
+    /**
+     * Versions the API rputes
+     * @param  string   $file
+     * @param  callable $callback
+     * @return Collection
+     */
+    protected function withVersions($file, callable $callback)
+    {
+        return collect(["V1"])->map(function ($version) use ($file,$callback) {
+            return call_user_func_array(
+                $callback,
+                [ sprintf("%s\%s", $this->namespace, $version), base_path(sprintf("routes/%s/%s", $version, $file))]
+            );
+        });
     }
 }
