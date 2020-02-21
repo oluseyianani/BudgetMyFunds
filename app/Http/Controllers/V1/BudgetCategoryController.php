@@ -23,7 +23,12 @@ class BudgetCategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $this->budgetCategory->fetchMany();
+        $begin = ($request->filled('begin')) ? $request->query('begin') : 0;
+        $perPage = ($request->filled('per_page')) ? $request->query('per_page') : 25;
+        $sortBy = ($request->filled('sort_by')) ? $request->query('sort_by') : "category";
+        $sortDirection = ($request->filled('sort_direction')) ? $request->query('sort_direction') : "asc";
+
+        $this->budgetCategory->fetchMany($begin, $perPage, $sortBy, $sortDirection);
     }
 
     /**
