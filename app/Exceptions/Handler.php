@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -58,6 +59,11 @@ class Handler extends ExceptionHandler
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
             $message = $exception->getMessage() ? $exception->getMessage() : "This endpoint or method does not exist";
             return formatResponse(405, $message);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            $message = $exception->getMessage() ? $exception->getMessage() : "Invalid Token";
+            return formatResponse(401, $message);
         }
 
         return parent::render($request, $exception);

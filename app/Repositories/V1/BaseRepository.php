@@ -4,13 +4,13 @@ namespace App\Repositories\V1;
 
 abstract class BaseRepository
 {
-    abstract function fetchMany($begin, $perPage, $sortBy, $sortDirection);
+    abstract function fetchMany(int $begin, int $perPage, string $sortBy, string $sortDirection);
 
-    abstract function create($data);
+    abstract function create(array $data);
 
-    abstract function fetchOne($id);
+    abstract function fetchOne(int $id);
 
-    abstract function update($data, $id);
+    abstract function update(array $data, int $id);
 
-    abstract function delete($id);
+    abstract function delete(int $id);
 }

@@ -40,8 +40,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
     /**
-     *
-     */
+     * generates a new token for user
+    */
     public function generateToken()
     {
         $this->api_token = Str::random(60);
@@ -50,6 +50,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this;
     }
 
+    /**
+     * Sends verification email to user
+     */
     public function sendApiEmailVerificationNotification()
     {
         $this->notify(new VerifyApiEmail);
