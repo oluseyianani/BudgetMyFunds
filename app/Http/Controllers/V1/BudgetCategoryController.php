@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Repositories\V1\BudgetCategoryRepository;
 
 class BudgetCategoryController extends Controller
@@ -25,20 +27,10 @@ class BudgetCategoryController extends Controller
     {
         $begin = ($request->filled('begin')) ? $request->query('begin') : 0;
         $perPage = ($request->filled('per_page')) ? $request->query('per_page') : 25;
-        $sortBy = ($request->filled('sort_by')) ? $request->query('sort_by') : "category";
+        $sortBy = ($request->filled('sort_by')) ? $request->query('sort_by') : "title";
         $sortDirection = ($request->filled('sort_direction')) ? $request->query('sort_direction') : "asc";
 
-        $this->budgetCategory->fetchMany($begin, $perPage, $sortBy, $sortDirection);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->budgetCategory->fetchMany($begin, $perPage, $sortBy, $sortDirection);
     }
 
     /**
@@ -47,9 +39,10 @@ class BudgetCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateCategoryRequest $request)
     {
-        //
+        //Create a policy to restrict access to none admins
+        return $this->budgetCategory->create($request->validated());
     }
 
     /**
@@ -58,21 +51,11 @@ class BudgetCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        return $this->budgetCategory->fetchOne($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -81,9 +64,9 @@ class BudgetCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
-        //
+        return $this->budgetCategory->update($request->validated(), $id);
     }
 
     /**
@@ -92,8 +75,8 @@ class BudgetCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        return $this->budgetCategory->delete($id);
     }
 }

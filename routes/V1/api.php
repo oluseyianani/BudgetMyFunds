@@ -26,5 +26,9 @@ Route::prefix('v1')->group(function() {
 
     Route::middleware('auth:api','verified')->prefix('category')->group(function() {
         Route::get('', 'BudgetCategoryController@index');
+        Route::post('', 'BudgetCategoryController@store');
+        Route::get('/{id}', 'BudgetCategoryController@show');
+        Route::put('/{id}', 'BudgetCategoryController@update');
+        Route::delete('/{id}', 'BudgetCategoryController@destroy');
     });
 });
