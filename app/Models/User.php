@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     /**
@@ -40,8 +40,8 @@ class User extends Authenticatable
 
 
     /**
-     *
-     */
+     * generates a new token for user
+    */
     public function generateToken()
     {
         $this->api_token = Str::random(60);
@@ -50,6 +50,9 @@ class User extends Authenticatable
         return $this;
     }
 
+    /**
+     * Sends verification email to user
+     */
     public function sendApiEmailVerificationNotification()
     {
         $this->notify(new VerifyApiEmail);
