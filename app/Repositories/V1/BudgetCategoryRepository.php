@@ -92,7 +92,7 @@ class BudgetCategoryRepository extends BaseRepository implements BudgetCategoryI
             if ($category->isDirty()) {
                 $category->save();
 
-                return formatResponse(200, 'Updated', true, collect($category));
+                return formatResponse(200, 'Category updated', true, collect($category));
             }
 
             return formatResponse(200, 'No changes made. No update required.', true, $category);
