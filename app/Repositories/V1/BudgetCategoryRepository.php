@@ -9,12 +9,22 @@ use App\Repositories\V1\Interfaces\BudgetCategoryInterface;
 class BudgetCategoryRepository extends BaseRepository implements BudgetCategoryInterface
 {
 
+     /**
+     * Gets all the categories
+     *
+     * @param $begin
+     * @param $perPage
+     * @param $sortBy
+     * @param $sortDirection
+     *
+     * @return json
+     */
     public function fetchMany(int $begin, int $perPage, string $sortBy, string $sortDirection)
     {
         try {
 
             $categories = Category::orderBy($sortBy, $sortDirection)
-                                ->with(["subcategory:id,sub_title"])
+                                ->with(["subcategory:category_id,id,sub_title"])
                                 ->offset($begin)
                                 ->limit($perPage)
                                 ->get();

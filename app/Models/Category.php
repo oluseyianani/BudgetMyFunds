@@ -31,6 +31,17 @@ class Category extends BaseModel
      */
     public function subcategory()
     {
-        return $this->hasMany(SubCategory::class);
+        return $this->hasMany(SubCategory::class, 'category_id');
+    }
+
+    /**
+     * Gets a category and associated subcategories
+     *
+     * @param Builder $query
+     * @param int $categoryId
+     */
+    public function scopeWithSubCategory($query, $categoryId)
+    {
+        return $query->findOrFail($categoryId)->subCategory();
     }
 }
