@@ -30,5 +30,9 @@ Route::prefix('v1')->group(function() {
         Route::get('/{id}', 'BudgetCategoryController@show');
         Route::put('/{id}', 'BudgetCategoryController@update');
         Route::delete('/{id}', 'BudgetCategoryController@destroy');
+
+        Route::post('/{id}/subcategory', 'BudgetSubCategoryController@store');
+        Route::put('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@update');
+        Route::delete('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@destroy');
     });
 });
