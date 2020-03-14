@@ -29,7 +29,7 @@ BudgetMyFunds App requires some softwares and Installations to run
 
 - Git (https://git-scm.com/docs)
 - Docker (https://www.docker.com/)
-- Postico (https://eggerapps.at/postico/)
+- SequelPro (https://sequelpro.com/download)
 
 The links above provide download and installation steps
 
@@ -86,11 +86,11 @@ $ docker-compose ps
 
 ```
 
-Your app should be running on (localhost)[0.0.0.0:8081]
+Your app should be running on [localhost](0.0.0.0:8081)
 
-####   Connecting to your Database on Docker via Postico
+####   Connecting to your Database on Docker via Seqlel Pro
 
-1. Get the ip and port number associated with your postgres service
+1. Get the ip and port number associated with your mysql service
 
 ```
 $ docker-compose ps
@@ -100,21 +100,57 @@ You should see an output similar to
 ```
           Name                         Command              State           Ports
 ------------------------------------------------------------------------------------------
-budget-my-funds-php-fpm     /usr/sbin/php-fpm7.3 -O         Up      9000/tcp
-budget-my-funds-postgres    docker-entrypoint.sh postgres   Up      0.0.0.0:8084->5432/tcp
-budget-my-funds-webserver   nginx -g daemon off;            Up      0.0.0.0:8081->80/tcp
+mysql     docker-entrypoint.sh mysqld      Up      0.0.0.0:13306->3306/tcp
+nginx     nginx -g daemon off;             Up      0.0.0.0:8080->80/tcp
+php       docker-php-entrypoint php-fpm    Up      0.0.0.0:9000->9000/tcp
+redis     docker-entrypoint.sh redis ...   Up      0.0.0.0:6379->6379/tcp
+sqlite3   sqlite3                          Up      0.0.0.0:43306->4306/tcp
 ```
 
-2. Open postico and add this connection details
+2. Open seqel-pro and add this connection details
 ```
 Host 0.0.0.0
-Port 8084 (as seen on the port for the postgress container)
+Port 3306 (as seen on the port for the postgress container)
 User The value for DB_USERNAME defined in your .env
 Password The value for DB_PASSWORD defined in your .env
 Database  The value for DB_DATABASE defined in your .env
 ```
 
 3. Your connection should be successful
+
+4. Test your app by running the migration
+
+```
+docker exec -it php php artisan migrate
+```
+
+OR IF you decide to run all commands directly in the conainer, you can follow these step to excute commands.
+
+```
+$ docker exec -it php bash
+```
+
+Now in the linux container instance,
+
+```
+$ php artian migrate
+```
+
+Your migrations should run successfully
+
+####   Testing Locally
+
+- Add a `database.testing.sqlite` in your `database` folder and run 
+
+```
+$ docker exec -it php composer test
+```
+
+OR in bash Docker container, run 
+
+```
+$ composer test
+```
 
 HAPPY CODING!!!
 
@@ -132,5 +168,7 @@ Common docker commands
 
 ## Contributing
 
-Thank you for the outstanding and collaborative work
+Thank you for the outstanding and collaborative work. You can find individual contributions in closed/open pull requests
+
 - [Fredrick Adegoke](https://github.com/Frediflexta)
+- [Mark Adeniran](https://github.com/Maxfurry)

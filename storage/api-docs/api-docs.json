@@ -1,0 +1,515 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "BudgetMyFunds API",
+        "description": "BudgetMyFunds App API Documentation",
+        "version": "1.0.0"
+    },
+    "basePath": "/api/v1",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "login a user",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "user's email",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "john.doe@email.com"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "Users password",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            }
+                        },
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "422": {
+                        "description": "Invalid email or passowrd"
+                    },
+                    "201": {
+                        "description": "Successfully logged in"
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Registers a user",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "user's email",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "john.doe@email.com"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "body",
+                        "description": "The user's phone number",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "phone_number": {
+                                    "type": "string",
+                                    "example": "+2348011111111111"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "Users password. Minimum eight characters, at least one letter and one number",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "password": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            }
+                        },
+                        "type": "integer"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "body",
+                        "description": "Users confirm password. Minimum eight characters, at least one letter and one number",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "password_confirmation": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "422": {
+                        "description": "Invalid email or passowrd"
+                    },
+                    "201": {
+                        "description": "Registered"
+                    }
+                }
+            }
+        },
+        "/category": {
+            "get": {
+                "description": "Gets all categories",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "The number of categories to return in a list or page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "begin",
+                        "in": "query",
+                        "description": "The offset to start fetching results from.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "The column to sort results with. The default is title.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "The direction for sorting, either asc (asceding) or desc (descending). Default is ascending",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "title",
+                        "in": "body",
+                        "description": "The title of the category",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Bills & Funds"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "creator",
+                        "in": "body",
+                        "description": "The creator of the category",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "creator": {
+                                    "type": "integer",
+                                    "example": 1
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "201": {
+                        "description": "Category created"
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "get": {
+                "description": "Returns the specified category.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates the specified category.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be updated.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "title",
+                        "in": "body",
+                        "description": "The title of the category",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Fundings"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "422": {
+                        "description": "The given data was invalid."
+                    },
+                    "200": {
+                        "description": "Category updated"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes the specified category.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be deleted.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "memberId",
+                        "in": "path",
+                        "description": "The id of the account member to be deleted.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "200": {
+                        "description": "Category deleted"
+                    }
+                }
+            }
+        },
+        "/category/{id}/subcategory": {
+            "post": {
+                "description": "Creates a new sub category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "body",
+                        "description": "The sub-title of the subCategory",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "sub_title": {
+                                    "type": "string",
+                                    "example": "savings"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "201": {
+                        "description": "SubCategory Created"
+                    }
+                }
+            }
+        },
+        "/category/{id}/subcategory/{subcategoryId}": {
+            "put": {
+                "description": "Edits a sub category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "subcategoryId",
+                        "in": "path",
+                        "description": "The id of the sub-category to be updated.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "body",
+                        "description": "The sub-title of the subCategory",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "sub_title": {
+                                    "type": "string",
+                                    "example": "savings updated"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category or SubCategory not found"
+                    },
+                    "200": {
+                        "description": "SubCategory Updated"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Edits a sub category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "subcategoryId",
+                        "in": "path",
+                        "description": "The id of the sub-category to be deleted.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category or SubCategory not found"
+                    },
+                    "200": {
+                        "description": "SubCategory deleted"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
