@@ -138,6 +138,20 @@ $ php artian migrate
 
 Your migrations should run successfully
 
+####   Testing Locally
+
+- Add a `database.testing.sqlite` in your `database` folder and run 
+
+```
+$ docker exec -it php composer test
+```
+
+OR in bash Docker container, run 
+
+```
+$ composer test
+```
+
 HAPPY CODING!!!
 
 Common docker commands
