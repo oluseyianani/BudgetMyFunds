@@ -61,7 +61,7 @@ class BudgetSubCategoryTest extends TestCase
         ];
 
         $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $data);
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $this->forceDeleteSubCategory($subCategoryId);
 
     }
