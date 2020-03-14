@@ -43,7 +43,7 @@ class BudgetSubCategoryRepository extends BaseRepository implements BudgetSubCat
            $subCategory = Category::withSubCategory($categoryId)->create($data);
 
            if ($subCategory) {
-               return formatResponse(201, 'Created', true, collect($subCategory));
+               return formatResponse(201, 'SubCategory Created', true, collect($subCategory));
            }
 
        } catch (Exception $e) {
@@ -79,7 +79,7 @@ class BudgetSubCategoryRepository extends BaseRepository implements BudgetSubCat
             $subCategory = Category::withSubCategory($id)->findOrFail($subCategoryId)->update($data);
 
             if ($subCategory) {
-                return formatResponse(201, 'Updated', true, collect($this->getSubCategory($subCategory)));
+                return formatResponse(200, 'SubCategory Updated', true, collect($this->getSubCategory($subCategory)));
             }
 
         } catch (Exception $e) {
@@ -102,7 +102,7 @@ class BudgetSubCategoryRepository extends BaseRepository implements BudgetSubCat
             $isDeleted = Category::withSubCategory($id)->findOrFail($subCategoryId)->delete();
 
             if ($isDeleted) {
-                return formatResponse(200, 'Category deleted', true);
+                return formatResponse(200, 'SubCategory deleted', true);
             }
 
         } catch (Exception $e) {
