@@ -361,6 +361,154 @@
                     }
                 }
             }
+        },
+        "/category/{id}/subcategory": {
+            "post": {
+                "description": "Creates a new sub category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "body",
+                        "description": "The sub-title of the subCategory",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "sub_title": {
+                                    "type": "string",
+                                    "example": "savings"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "201": {
+                        "description": "SubCategory Created"
+                    }
+                }
+            }
+        },
+        "/category/{id}/subcategory/{subcategoryId}": {
+            "put": {
+                "description": "Edits a sub category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "subcategoryId",
+                        "in": "path",
+                        "description": "The id of the sub-category to be updated.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "body",
+                        "description": "The sub-title of the subCategory",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "sub_title": {
+                                    "type": "string",
+                                    "example": "savings updated"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category or SubCategory not found"
+                    },
+                    "200": {
+                        "description": "SubCategory Updated"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Edits a sub category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "subcategoryId",
+                        "in": "path",
+                        "description": "The id of the sub-category to be deleted.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category or SubCategory not found"
+                    },
+                    "200": {
+                        "description": "SubCategory deleted"
+                    }
+                }
+            }
         }
     },
     "definitions": {}

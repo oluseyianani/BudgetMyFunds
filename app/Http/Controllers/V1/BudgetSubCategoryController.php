@@ -18,6 +18,37 @@ class BudgetSubCategoryController extends Controller
     }
 
     /**
+     *  @SWG\Post(
+     *    path="/category/{id}/subcategory",
+     *    description="Creates a new sub category",
+     *    consumes={"multipart/form-data", "application/json"},
+     *       @SWG\Parameter(
+     *          name="Authorization",
+     *          description="Bearer token, needed for authentication",
+     *          required=true,
+     *          type="string",
+     *          in="header"
+     *        ),
+     *       @SWG\Parameter(
+     *          name="id",
+     *          description="The id of the category to be returned.",
+     *          required=true,
+     *          type="integer",
+     *          in="path"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="sub_title",
+     *          description="The sub-title of the subCategory",
+     *          required=true,
+     *          in="body",
+     *          @SWG\Schema(
+     *              @SWG\Property(property="sub_title", type="string", example="savings")
+     *         )
+     *      ),
+     *    @SWG\Response(response=401, description="Invalid token"),
+     *    @SWG\Response(response=404, description="Category not found"),
+     *    @SWG\Response(response=201, description="SubCategory Created"),
+     * )
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -29,6 +60,45 @@ class BudgetSubCategoryController extends Controller
     }
 
     /**
+     *  @SWG\Put(
+     *    path="/category/{id}/subcategory/{subcategoryId}",
+     *    description="Edits a sub category",
+     *    consumes={"multipart/form-data", "application/json"},
+     *       @SWG\Parameter(
+     *          name="Authorization",
+     *          description="Bearer token, needed for authentication",
+     *          required=true,
+     *          type="string",
+     *          in="header"
+     *        ),
+     *       @SWG\Parameter(
+     *          name="id",
+     *          description="The id of the category to be returned.",
+     *          required=true,
+     *          type="integer",
+     *          in="path"
+     *      ),
+     *       @SWG\Parameter(
+     *          name="subcategoryId",
+     *          description="The id of the sub-category to be updated.",
+     *          required=true,
+     *          type="integer",
+     *          in="path"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="sub_title",
+     *          description="The sub-title of the subCategory",
+     *          required=true,
+     *          in="body",
+     *          @SWG\Schema(
+     *              @SWG\Property(property="sub_title", type="string", example="savings updated")
+     *         )
+     *      ),
+     *    @SWG\Response(response=401, description="Invalid token"),
+     *    @SWG\Response(response=404, description="Category or SubCategory not found"),
+     *    @SWG\Response(response=200, description="SubCategory Updated"),
+     * )
+     *
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -42,6 +112,37 @@ class BudgetSubCategoryController extends Controller
     }
 
     /**
+     *  @SWG\Delete(
+     *    path="/category/{id}/subcategory/{subcategoryId}",
+     *    description="Edits a sub category",
+     *    consumes={"multipart/form-data", "application/json"},
+     *       @SWG\Parameter(
+     *          name="Authorization",
+     *          description="Bearer token, needed for authentication",
+     *          required=true,
+     *          type="string",
+     *          in="header"
+     *        ),
+     *       @SWG\Parameter(
+     *          name="id",
+     *          description="The id of the category to be returned.",
+     *          required=true,
+     *          type="integer",
+     *          in="path"
+     *      ),
+     *       @SWG\Parameter(
+     *          name="subcategoryId",
+     *          description="The id of the sub-category to be deleted.",
+     *          required=true,
+     *          type="integer",
+     *          in="path"
+     *      ),
+     *    @SWG\Response(response=401, description="Invalid token"),
+     *    @SWG\Response(response=404, description="Category or SubCategory not found"),
+     *    @SWG\Response(response=200, description="SubCategory deleted"),
+     * )
+     *
+     *
      * Remove the specified resource from storage.
      *
      * @param  int  $id
