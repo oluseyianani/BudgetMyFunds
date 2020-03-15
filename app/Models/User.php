@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Role;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Notifications\VerifyApiEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'email', 'phone_number', 'password',
     ];
 
     /**
@@ -38,6 +40,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Eagerloads role on User request
+     */
+    protected $with = ['role'];
 
 
     /**
@@ -59,8 +66,20 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new VerifyApiEmail);
     }
 
+    /**
+     * Get the category by a user.
+     */
     public function category()
     {
         return $this->hasMany(Category::class, 'creator');
     }
+
+    /**
+     * Ges user role.
+     */
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
 }
