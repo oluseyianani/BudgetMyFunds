@@ -509,6 +509,178 @@
                     }
                 }
             }
+        },
+        "/role": {
+            "get": {
+                "description": "Gets all Roles",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "The number of role to return in a list or page.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "begin",
+                        "in": "query",
+                        "description": "The offset to start fetching results from.",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "The column to sort results with. The default is role.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "The direction for sorting, either asc (asceding) or desc (descending). Default is ascending",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "role",
+                        "in": "body",
+                        "description": "The role to be created",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "role": {
+                                    "type": "string",
+                                    "example": "Admin"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "201": {
+                        "description": "Role created"
+                    }
+                }
+            }
+        },
+        "/role/{id}": {
+            "get": {
+                "description": "Returns the specified role.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the role to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "role not found"
+                    },
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates the specified role.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the role to be updated.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "title",
+                        "in": "body",
+                        "description": "The role to update",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "role": {
+                                    "type": "string",
+                                    "example": "Updated Admin"
+                                }
+                            }
+                        },
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    },
+                    "422": {
+                        "description": "The given data was invalid."
+                    },
+                    "200": {
+                        "description": "Updated"
+                    }
+                }
+            }
         }
     },
     "definitions": {}
