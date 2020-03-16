@@ -35,4 +35,11 @@ Route::prefix('v1')->group(function() {
         Route::put('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@update');
         Route::delete('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@destroy');
     });
+
+    Route::middleware('auth:api')->group(function() {
+        Route::get('role', 'RoleController@index');
+        Route::get('role/{id}', 'RoleController@show');
+        Route::post('role', 'RoleController@store');
+        Route::put('role/{id}', 'RoleController@update');
+    });
 });
