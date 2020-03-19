@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\Access\AuthorizationException;
+
 
 class Handler extends ExceptionHandler
 {
@@ -64,6 +66,11 @@ class Handler extends ExceptionHandler
         if ($exception instanceof AuthenticationException) {
             $message = $exception->getMessage() ? $exception->getMessage() : "Invalid Token";
             return formatResponse(401, $message);
+        }
+
+        if ($exception instanceof AuthorizationException) {
+            $message = $exception->getMessage() ? $exception->getMessage() : "You're unautorized to make this request";
+            return formatResponse(403, $message);
         }
 
         return parent::render($request, $exception);

@@ -3,39 +3,53 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class BudgetCategoryTest extends TestCase
 {
-    use RefreshDatabase, WithoutMiddleware;
+    use RefreshDatabase;
 
     public function setUp() :void
     {
         parent::setUp();
 
-        $category = Category::firstOrCreate([
-            'title' => 'Test Category',
-            'creator' => User::firstOrCreate([
-                'email' => 'test@test.com',
-                'password' => 'password123'
-            ])['id']
+        $role = Role::create([
+            'role' => 'Admin'
         ]);
 
-        $this->category = $category;
+        $user = User::firstOrCreate([
+            'email' => 'test@test.com',
+            'password' => 'password123',
+            'role_id' => $role['id'],
+            'email_verified_at' => now()
+        ])->generateToken();
+
+        $category = Category::firstOrCreate([
+            'title' => 'Test Category',
+            'creator' =>$user['id']
+        ]);
+
+        $this->data = [
+            'category' => $category,
+            'user' => $user
+        ];
     }
 
-    public function getResponse($method, $url, $data = [])
+    public function getResponse($method, $url, $token, $data = [])
     {
-        return $this->json($method, $url, $data);
+        return $this->withHeaders([
+            'Authorization' => "Bearer " . $token,
+        ])->json($method, $url, $data);
     }
 
     public function testIndexMethod()
     {
-        $response = $this->getResponse('GET', 'api/v1/category');
+        $token = $this->data['user']['api_token'];
+        $response = $this->getResponse('GET', 'api/v1/category', $token);
         $response->assertStatus(200);
     }
 
@@ -43,35 +57,37 @@ class BudgetCategoryTest extends TestCase
     {
         $data = [
             'title' => 'some test category',
-            'creator' => User::first()['id']
+            'creator' => $this->data['user']['id']
         ];
-        $response = $this->getResponse('POST', 'api/v1/category', $data);
+        $token = $this->data['user']['api_token'];
+        $response = $this->getResponse('POST', 'api/v1/category', $token, $data);
         $response->assertStatus(201);
     }
 
     public function testShowMethod()
     {
-        $id = $this->category->id;
-        $response = $this->getResponse('GET', "api/v1/category/{$id}");
+        $id = $this->data['category']['id'];
+        $token = $this->data['user']['api_token'];
+        $response = $this->getResponse('GET', "api/v1/category/{$id}", $token);
         $response->assertStatus(200);
     }
 
     public function testUpdateMethod()
     {
-        $id = $this->category->id;
+        $id = $this->data['category']['id'];
         $data = [
             'title' => 'updated category'
         ];
-
-        $response = $this->getResponse('PUT', "api/v1/category/{$id}", $data);
+        $token = $this->data['user']['api_token'];
+        $response = $this->getResponse('PUT', "api/v1/category/{$id}",$token, $data);
         $response->assertStatus(200);
     }
 
     public function testDeleteMethod()
     {
-        $id = $this->category->id;
-
-        $response = $this->getResponse('DELETE', "api/v1/category/{$id}");
+        $id = $this->data['category']['id'];
+        $token = $this->data['user']['api_token'];
+        $response = $this->getResponse('DELETE', "api/v1/category/{$id}", $token);
         $response->assertStatus(200);
     }
 }

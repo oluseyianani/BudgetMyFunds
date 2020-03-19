@@ -68,6 +68,8 @@ class BudgetCategoryController extends Controller
      */
     public function index(Request $request)
     {
+        // dd($request->user());
+        $this->authorize('view', $request->user());
         $begin = ($request->filled('begin')) ? $request->query('begin') : 0;
         $perPage = ($request->filled('per_page')) ? $request->query('per_page') : 25;
         $sortBy = ($request->filled('sort_by')) ? $request->query('sort_by') : "title";
@@ -117,7 +119,7 @@ class BudgetCategoryController extends Controller
      */
     public function store(CreateCategoryRequest $request)
     {
-        //Create a policy to restrict access to none admins
+        $this->authorize('create', $request->user());
         return $this->budgetCategory->create($request->validated());
     }
 
@@ -149,8 +151,9 @@ class BudgetCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(Request $request, int $id)
     {
+        $this->authorize('view', $request->user());
         return $this->budgetCategory->fetchOne($id);
     }
 
@@ -198,6 +201,7 @@ class BudgetCategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, int $id)
     {
+        $this->authorize('update', $request->user());
         return $this->budgetCategory->update($request->validated(), $id);
     }
 
@@ -238,8 +242,9 @@ class BudgetCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $this->authorize('delete', $request->user());
         return $this->budgetCategory->delete($id);
     }
 }

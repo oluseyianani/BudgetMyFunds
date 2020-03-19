@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'email', 'phone_number', 'password',
+        'email', 'phone_number', 'password', 'email_verified_at',
     ];
 
     /**
@@ -80,6 +80,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public function isOwner()
+    {
+        return $this->role->role === 'Owner';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role->role === 'Admin';
+    }
+
+    public function isCollaborator()
+    {
+        return $this->role->role === 'Collaborator';
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role->role === 'Super admin';
     }
 
 }

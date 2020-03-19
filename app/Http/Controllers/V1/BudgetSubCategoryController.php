@@ -56,6 +56,7 @@ class BudgetSubCategoryController extends Controller
      */
     public function store(CreateSubCategoryRequest $request, int $id)
     {
+        $this->authorize('create', $request->user());
         return $this->budgetSubCategory->create($request->validated(), $id);
     }
 
@@ -108,6 +109,7 @@ class BudgetSubCategoryController extends Controller
      */
     public function update(UpdateSubCategoryRequest $request, int $id, int $subCategoryId)
     {
+        $this->authorize('update', $request->user());
         return $this->budgetSubCategory->update($request->validated(), $id, $subCategoryId);
     }
 
@@ -148,8 +150,9 @@ class BudgetSubCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id, int $subCategoryId)
+    public function destroy(Request $request, int $id, int $subCategoryId)
     {
+        $this->authorize('delete', $request->user());
         return $this->budgetSubCategory->delete($id, $subCategoryId);
     }
 }
