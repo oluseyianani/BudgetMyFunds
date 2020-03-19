@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\SubCategory;
@@ -12,16 +13,22 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class BudgetSubCategoryTest extends TestCase
 {
-    use RefreshDatabase, WithoutMiddleware;
+    use RefreshDatabase;
 
     public function setUp() :void
     {
         parent::setUp();
 
+        $role = Role::create([
+            'role' => 'Admin'
+        ]);
+
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
-            'password' => 'password123'
-        ]);
+            'password' => 'password123',
+            'role_id' => $role['id'],
+            'email_verified_at' => now()
+        ])->generateToken();
 
         $category = Category::firstOrCreate([
             'title' => 'Test Category',
@@ -35,9 +42,11 @@ class BudgetSubCategoryTest extends TestCase
 
     }
 
-    public function getResponse($method, $url, $data = [])
+    public function getResponse($method, $url, $token, $data = [])
     {
-        return $this->json($method, $url, $data);
+        return $this->withHeaders([
+            'Authorization' => "Bearer " . $token,
+        ])->json($method, $url, $data);
     }
 
     public function testStoreMethod()
@@ -46,9 +55,10 @@ class BudgetSubCategoryTest extends TestCase
             'sub_title' => 'Budget Sub Category Test'
         ];
 
+        $token = $this->data['user']['api_token'];
         $categoryId = $this->data['category']['id'];
 
-        $response = $this->getResponse('POST', "api/v1/category/{$categoryId}/subcategory", $data);
+        $response = $this->getResponse('POST', "api/v1/category/{$categoryId}/subcategory", $token, $data);
         $response->assertStatus(201);
     }
 
@@ -56,11 +66,12 @@ class BudgetSubCategoryTest extends TestCase
     {
         $subCategoryId = $this->createSubCategory()["id"];
         $categoryId = $this->data['category']['id'];
+        $token = $this->data['user']['api_token'];
         $data = [
             'sub_title' => 'Updated Sub Category Test'
         ];
 
-        $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $data);
+        $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $token, $data);
         $response->assertStatus(200);
         $this->forceDeleteSubCategory($subCategoryId);
 
@@ -68,10 +79,11 @@ class BudgetSubCategoryTest extends TestCase
 
     public function testDeleteMethod()
     {
+        $token = $this->data['user']['api_token'];
         $subCategoryId = $this->createSubCategory()['id'];
         $categoryId = $this->data['category']['id'];
 
-        $response = $this->getResponse('DELETE', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}");
+        $response = $this->getResponse('DELETE', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $token);
         $response->assertStatus(200);
     }
 
