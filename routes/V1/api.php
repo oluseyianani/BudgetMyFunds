@@ -34,6 +34,10 @@ Route::prefix('v1')->group(function() {
         Route::post('/{id}/subcategory', 'BudgetSubCategoryController@store');
         Route::put('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@update');
         Route::delete('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@destroy');
+
+        Route::post('/{id}/usercategory', 'BudgetUserCategoryController@store');
+        Route::put('/{id}/usercategory/{userCategoryId}', 'BudgetUserCategoryController@update');
+        Route::delete('/{id}/usercategory/{userCategoryId}', 'BudgetUserCategoryController@destroy');
     });
 
     Route::middleware('auth:api')->group(function() {
