@@ -85,4 +85,9 @@ class UserPolicy
     {
         //
     }
+
+    public function userCategory(User $user)
+    {
+        return $user->isOwner();
+    }
 }

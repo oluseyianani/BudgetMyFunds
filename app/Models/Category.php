@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\UserCategory;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends BaseModel
@@ -43,5 +44,24 @@ class Category extends BaseModel
     public function scopeWithSubCategory($query, $categoryId)
     {
         return $query->findOrFail($categoryId)->subCategory();
+    }
+
+    /**
+     * Get the usercategories for a category.
+     */
+    public function usercategory()
+    {
+        return $this->hasMany(UserCategory::class, 'category_id');
+    }
+
+      /**
+     * Gets a category and associated subcategories
+     *
+     * @param Builder $query
+     * @param int $categoryId
+     */
+    public function scopeWithUserCategory($query, $categoryId)
+    {
+        return $query->findOrFail($categoryId)->userCategory();
     }
 }
