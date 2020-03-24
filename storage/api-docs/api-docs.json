@@ -510,6 +510,154 @@
                 }
             }
         },
+        "/category/{id}/usercategory": {
+            "post": {
+                "description": "Creates a new user category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "title",
+                        "in": "body",
+                        "description": "The title of the userCategory",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "savings for me"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "201": {
+                        "description": "user Category Created"
+                    }
+                }
+            }
+        },
+        "/category/{id}/usercategory/{userCategoryId}": {
+            "put": {
+                "description": "Edits a user category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "usercategoryId",
+                        "in": "path",
+                        "description": "The id of the user category to be updated.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "title",
+                        "in": "body",
+                        "description": "The title of the userCategory",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "My savings updated"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "200": {
+                        "description": "User Category Updated"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Edits a user category",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the category to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "userCategoryId",
+                        "in": "path",
+                        "description": "The id of the user-category to be deleted.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "200": {
+                        "description": "User Category deleted"
+                    }
+                }
+            }
+        },
         "/role": {
             "get": {
                 "description": "Gets all Roles",
