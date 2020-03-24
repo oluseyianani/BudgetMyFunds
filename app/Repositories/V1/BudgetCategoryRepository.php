@@ -105,7 +105,7 @@ class BudgetCategoryRepository extends BaseRepository implements BudgetCategoryI
                 return formatResponse(200, 'Category updated', true, collect($category));
             }
 
-            return formatResponse(200, 'No changes made. No update required.', true, $category);
+            return formatResponse(200, 'No changes made. No update required.', true, collect($category));
 
         } catch (Exception $e) {
             return formatResponse(fetchErrorCode($e), get_class($e) . ": ". $e->getMessage());
