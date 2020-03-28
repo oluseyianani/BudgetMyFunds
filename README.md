@@ -9,6 +9,8 @@ An API implementation for Users willing to manage their finances
 
 The application API is hosted on Heroku and available on [here](http://core-api.budgetmyfunds.com)
 
+API Documentation URL [here](http://core-api.budgetmyfunds.com/api/documentation)
+
 ### Table of Contents
 
   - Technologies
