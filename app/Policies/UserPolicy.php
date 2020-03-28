@@ -90,4 +90,9 @@ class UserPolicy
     {
         return $user->isOwner();
     }
+
+    public function ownerAccess(User $user)
+    {
+        return $user->isOwner();
+    }
 }

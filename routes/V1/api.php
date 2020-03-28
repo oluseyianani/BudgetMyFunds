@@ -46,4 +46,9 @@ Route::prefix('v1')->group(function() {
         Route::post('role', 'RoleController@store');
         Route::put('role/{id}', 'RoleController@update');
     });
+
+    Route::middleware('auth:api', 'verified')->group(function() {
+        Route::post('profile', 'BudgetUserProfileController@store');
+        Route::get('profile/{userId}', 'BudgetUserProfileController@show');
+    });
 });
