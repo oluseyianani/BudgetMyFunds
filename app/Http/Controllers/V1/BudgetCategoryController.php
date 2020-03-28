@@ -68,7 +68,6 @@ class BudgetCategoryController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->user());
         $this->authorize('view', $request->user());
         $begin = ($request->filled('begin')) ? $request->query('begin') : 0;
         $perPage = ($request->filled('per_page')) ? $request->query('per_page') : 25;

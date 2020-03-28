@@ -658,6 +658,151 @@
                 }
             }
         },
+        "/profile": {
+            "post": {
+                "description": "Creates or Updates a user profile",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "photo_url",
+                        "in": "body",
+                        "description": "The url of the profile picture",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "photo_url": {
+                                    "type": "string",
+                                    "example": "https://picsum.photos/200/300.jpg"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "body",
+                        "description": "The first name of the user",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "first_name": {
+                                    "type": "string",
+                                    "example": "Oluseyi"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "body",
+                        "description": "The last name of the user",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "last_name": {
+                                    "type": "string",
+                                    "example": "Oluseyi"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "gender",
+                        "in": "body",
+                        "description": "The gender of the user",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "gender": {
+                                    "type": "string",
+                                    "example": "M or F"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "date_of_birth",
+                        "in": "body",
+                        "description": "The date of birth of the user",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "date_of_birth": {
+                                    "type": "string",
+                                    "example": "Y-m-d"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "postal_address",
+                        "in": "body",
+                        "description": "The postal address of the user",
+                        "required": false,
+                        "schema": {
+                            "properties": {
+                                "postal_address": {
+                                    "type": "string",
+                                    "example": "address example"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "201": {
+                        "description": "Profile created"
+                    },
+                    "200": {
+                        "description": "Profile updated"
+                    }
+                }
+            }
+        },
+        "/profile/{id}": {
+            "get": {
+                "description": "Returns the specified user profile.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer token, needed for authentication",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the user to be returned.",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Invalid token"
+                    },
+                    "404": {
+                        "description": "user not found"
+                    },
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            }
+        },
         "/role": {
             "get": {
                 "description": "Gets all Roles",
