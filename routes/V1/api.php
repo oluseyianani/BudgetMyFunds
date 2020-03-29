@@ -34,6 +34,10 @@ Route::prefix('v1')->group(function() {
         Route::post('/{id}/subcategory', 'BudgetSubCategoryController@store');
         Route::put('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@update');
         Route::delete('/{id}/subcategory/{subCategoryId}', 'BudgetSubCategoryController@destroy');
+
+        Route::post('/{id}/usercategory', 'BudgetUserCategoryController@store');
+        Route::put('/{id}/usercategory/{userCategoryId}', 'BudgetUserCategoryController@update');
+        Route::delete('/{id}/usercategory/{userCategoryId}', 'BudgetUserCategoryController@destroy');
     });
 
     Route::middleware('auth:api')->group(function() {
@@ -41,5 +45,10 @@ Route::prefix('v1')->group(function() {
         Route::get('role/{id}', 'RoleController@show');
         Route::post('role', 'RoleController@store');
         Route::put('role/{id}', 'RoleController@update');
+    });
+
+    Route::middleware('auth:api', 'verified')->group(function() {
+        Route::post('profile', 'BudgetUserProfileController@store');
+        Route::get('profile/{userId}', 'BudgetUserProfileController@show');
     });
 });
