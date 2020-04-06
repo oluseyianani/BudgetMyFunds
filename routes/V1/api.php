@@ -45,10 +45,27 @@ Route::prefix('v1')->group(function() {
         Route::get('role/{id}', 'RoleController@show');
         Route::post('role', 'RoleController@store');
         Route::put('role/{id}', 'RoleController@update');
+
+        Route::get('goal/category', 'GoalCategoryController@index');
+        Route::get('goal/category/{id}', 'GoalCategoryController@show');
+        Route::post('goal/category', 'GoalCategoryController@store');
+        Route::put('goal/category/{id}', 'GoalCategoryController@update');
+        Route::delete('goal/category/{id}', 'GoalCategoryController@destroy');
     });
 
     Route::middleware('auth:api', 'verified')->group(function() {
         Route::post('profile', 'BudgetUserProfileController@store');
         Route::get('profile/{userId}', 'BudgetUserProfileController@show');
+
+        Route::get('goal', 'GoalController@index');
+        Route::get('goal/{id}', 'GoalController@show');
+        Route::post('goal', 'GoalController@store');
+        Route::put('goal/{id}', 'GoalController@update');
+        Route::delete('goal/{id}', 'GoalController@destroy');
+        Route::post('goal/{id}/complete', 'GoalController@complete');
+
+        Route::post('goal/{id}/tracking', 'GoalTrackingController@store');
+        Route::put('goal/{id}/tracking/{trackingId}', 'GoalTrackingController@update');
+        Route::delete('goal/{id}/tracking/{trackingId}', 'GoalTrackingController@destroy');
     });
 });

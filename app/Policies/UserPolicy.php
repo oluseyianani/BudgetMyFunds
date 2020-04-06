@@ -64,27 +64,6 @@ class UserPolicy
         return $user->isAdmin() || $user->isSuperAdmin();
     }
 
-    /**
-     * Determine whether the user can restore.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function restore(User $user)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function forceDelete(User $user)
-    {
-        //
-    }
 
     public function userCategory(User $user)
     {
@@ -94,5 +73,10 @@ class UserPolicy
     public function ownerAccess(User $user)
     {
         return $user->isOwner();
+    }
+
+    public function ownerSuperAdminAccess(User $user)
+    {
+        return $user->isOwner() || $user->isSuperAdmin();
     }
 }

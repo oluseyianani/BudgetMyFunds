@@ -16,3 +16,4 @@ build/
 .env.testing
 .idea
 .vscode
+xdebug.log
