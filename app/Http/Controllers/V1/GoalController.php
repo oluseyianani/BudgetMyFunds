@@ -156,7 +156,7 @@ class GoalController extends Controller
      *          required=true,
      *          in="body",
      *          @SWG\Schema(
-     *              @SWG\Property(property="due_date", type="date", example=Y-m-d h:m:s)
+     *              @SWG\Property(property="due_date", type="date", example="Y-m-d h:m:s")
      *         )
      *      ),
      *        @SWG\Parameter(
@@ -165,7 +165,7 @@ class GoalController extends Controller
      *          required=true,
      *          in="body",
      *          @SWG\Schema(
-     *              @SWG\Property(property="due_date", type="date", example=Y-m-d h:m:s)
+     *              @SWG\Property(property="auto_compute", type="boolean", example="0")
      *         )
      *      ),
      *     @SWG\Parameter(
