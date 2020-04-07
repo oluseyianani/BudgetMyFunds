@@ -19,7 +19,7 @@ class GoalPolicy
      */
     public function view(User $user, Goal $goal)
     {
-        return $user->isSuperAdmin() || $user->id === $goal->user_id;
+        return $user->isSuperAdmin() || $user->id == $goal->user_id;
     }
 
     /**
@@ -31,7 +31,7 @@ class GoalPolicy
      */
     public function update(User $user, Goal $goal)
     {
-        return $user->id === $goal->user_id;
+        return $user->id == $goal->user_id;
     }
 
        /**
@@ -43,7 +43,7 @@ class GoalPolicy
      */
     public function create(User $user, Goal $goal)
     {
-        return $user->id === $goal->user_id;
+        return $user->id == $goal->user_id;
     }
 
     /**
@@ -55,6 +55,6 @@ class GoalPolicy
      */
     public function delete(User $user, Goal $goal)
     {
-        return $user->isSuperAdmin() || $user->id === $goal->user_id;
+        return $user->isSuperAdmin() || $user->id == $goal->user_id;
     }
 }

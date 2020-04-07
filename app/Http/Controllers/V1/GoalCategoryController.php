@@ -99,7 +99,7 @@ class GoalCategoryController extends Controller
      *      ),
      *    @SWG\Response(response=401, description="Invalid token"),
      *    @SWG\Response(response=201, description="Goal Category created"),
-     *
+     * )
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
