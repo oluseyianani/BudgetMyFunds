@@ -7,13 +7,26 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Notifications\VerifyApiEmail;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->connection = env('APP_ENV') === 'testing' ? 'sqlite' : 'mysql';
+    }
+
+    public static function getFullTableName()
+    {
+        $model = new static();
+        return "{$model->getConnectionName()}.{$model->getTable()}";
+    }
+    
     /**
      * The attributes that are mass assignable.
      *
