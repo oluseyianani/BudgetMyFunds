@@ -13,6 +13,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GoalTrackingTest extends TestCase
 {
+   use RefreshDatabase;
+   
    public function setUp() :void
    {
         parent::setUp();
