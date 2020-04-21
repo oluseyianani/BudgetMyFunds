@@ -106,7 +106,6 @@ class RegisterController extends Controller
      */
     public function register(CreateUserRequest $request)
     {
-
         $validated = $request->validated();
         $validated['password'] = bcrypt($request['password']);
         event(new Registered($user = $this->create($validated)));
