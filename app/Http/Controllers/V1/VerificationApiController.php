@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V1;
 
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 
 class VerificationApiController extends Controller
 {
-
     use VerifiesEmails;
 
     /**
@@ -31,7 +31,6 @@ class VerificationApiController extends Controller
     */
     public function verify(Request $request)
     {
-
         try {
             $userID = $request['id'];
             $user = User::findOrFail($userID);
@@ -59,7 +58,6 @@ class VerificationApiController extends Controller
     */
     public function resend(Request $request)
     {
-
         if ($request->user()->hasVerifiedEmail()) {
             return formatResponse(400, 'This email has already been verified', false);
         }

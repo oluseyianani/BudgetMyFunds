@@ -25,7 +25,7 @@ class CreateUserRequest extends FormRequest
     {
         return [
             'email' => 'required|string|email|max:255|unique:users',
-            'phone_number' => 'number|regex:/^(\+234)[0-9]{10}$/',
+            'phone_number' => 'min:11|numeric',
             'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/', //Minimum eight characters, at least one letter and one number
         ];
     }
