@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\UserCategory;
-use Illuminate\Database\Eloquent\Model;
 
 class Category extends BaseModel
 {
@@ -16,11 +15,11 @@ class Category extends BaseModel
     protected $table = 'categories';
 
 
-     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    /**
+    * The attributes that are mass assignable.
+    *
+    * @var array
+    */
     protected $fillable = [
         'title',
         'creator'
@@ -54,7 +53,7 @@ class Category extends BaseModel
         return $this->hasMany(UserCategory::class, 'category_id');
     }
 
-      /**
+    /**
      * Gets a category and associated subcategories
      *
      * @param Builder $query

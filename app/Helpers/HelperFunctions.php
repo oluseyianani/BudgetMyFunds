@@ -11,7 +11,6 @@
  */
 function formatResponse($code = 500, $message = 'Internal Server Error', $success = false, $data = [])
 {
-
     if (!checkStatusCodeValidity($code)) {
         $code = 500;
     }
@@ -58,4 +57,18 @@ function checkStatusCodeValidity($code)
     }
 
     return false;
+}
+
+
+function formatDate($date)
+{
+    $dateArray = explode('-', $date);
+    if (count($dateArray) >= 2) {
+        return [
+            'year' => $dateArray[0],
+            'month' => $dateArray[1]
+        ];
+    }
+
+    return "invalid date";
 }

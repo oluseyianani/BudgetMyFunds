@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 
 class UserCategory extends BaseModel
 {
@@ -16,11 +15,11 @@ class UserCategory extends BaseModel
     protected $table = 'user_categories';
 
 
-     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    /**
+    * The attributes that are mass assignable.
+    *
+    * @var array
+    */
     protected $fillable = [
         'category_id',
         'user_id',
