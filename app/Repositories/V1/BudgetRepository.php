@@ -10,16 +10,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class BudgetRepository extends BaseRepository
 {
 
-     /**
-     * Gets all the categories
-     *
-     * @param $begin
-     * @param $perPage
-     * @param $sortBy
-     * @param $sortDirection
-     *
-     * @return json
-     */
+    /**
+    * Gets all the categories
+    *
+    * @param $begin
+    * @param $perPage
+    * @param $sortBy
+    * @param $sortDirection
+    * @param $year
+    * @param $month
+    * @param $userId
+    * @return json
+    */
     public function fetchMany(int $begin, int $perPage, string $sortBy, string $sortDirection, string $year = null, string $month = null, int $userId = null)
     {
         $userId = auth()->user()->isSuperAdmin() ? $userId : null;
@@ -48,7 +50,7 @@ class BudgetRepository extends BaseRepository
 
 
     /**
-     * Creates category record
+     * Creates Budget record
      *
      * @param array $data
      *
@@ -66,9 +68,10 @@ class BudgetRepository extends BaseRepository
     }
 
     /**
-     * Fetches a category with its subcategories
+     * Fetches a budegt for a loggedin user with its categories and subcategories
      *
      * @param int $id
+     * @param int $userId
      *
      * @return json
      */
@@ -87,10 +90,12 @@ class BudgetRepository extends BaseRepository
     }
 
     /**
-     * Updates a category resource
+     * Updates a budget resource
      *
      * @param array $data to update
      * @param int $id of the resource
+     *
+     * @return json
      */
     public function update(array $data, int $id)
     {
@@ -126,9 +131,9 @@ class BudgetRepository extends BaseRepository
     }
 
     /**
-     * Destroys a category resource
+     * Destroys a budget resource
      *
-     * @param int $id of the category resource to destroy
+     * @param int $id of the budget resource to destroy
      */
     public function delete(int $id)
     {

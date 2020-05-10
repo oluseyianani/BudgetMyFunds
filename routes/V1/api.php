@@ -73,5 +73,11 @@ Route::prefix('v1')->middleware('cors')->group(function () {
         Route::post('budget', 'BudgetController@store');
         Route::put('budget/{id}', 'BudgetController@update');
         Route::delete('budget/{id}', 'BudgetController@destroy');
+
+        Route::get('budget/{id}/tracking', 'BudgetTrackingController@index');
+        Route::get('budget/{id}/tracking/{trackingId}', 'BudgetTrackingController@show');
+        Route::post('budget/{id}/tracking', 'BudgetTrackingController@store');
+        Route::put('budget/{id}/tracking/{trackingId}', 'BudgetTrackingController@update');
+        Route::delete('budget/{id}/tracking/{trackingId}', 'BudgetTrackingController@destroy');
     });
 });

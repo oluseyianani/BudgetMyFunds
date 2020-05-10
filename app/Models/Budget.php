@@ -37,6 +37,15 @@ class Budget extends BaseModel
     protected $guarded = [];
 
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($budget) {
+            $budget->budgetTracking()->delete();
+        });
+    }
+
     /**
      * Relationship with user
      */
@@ -68,5 +77,10 @@ class Budget extends BaseModel
     {
         $user = $userId ?: auth()->user()['id'];
         return $query->where('user_id', $user);
+    }
+
+    public function budgetTracking()
+    {
+        return $this->hasMany(BudgetTracking::class, 'budget_id');
     }
 }

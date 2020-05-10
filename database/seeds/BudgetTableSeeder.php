@@ -18,7 +18,7 @@ class BudgetTableSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             $randomCategory = Category::inRandomOrder()->limit(1)->get('id');
             $randomSubCategory = SubCategory::inRandomOrder()->limit(1)->get('id');
-            
+
             User::all()->each(function ($user) use ($randomCategory, $randomSubCategory) {
                 factory(Budget::class)->create([
                     'user_id' => $user['id'],
