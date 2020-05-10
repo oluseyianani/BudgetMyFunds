@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class GoalTrackingTest extends TestCase
 {
    use RefreshDatabase;
-   
+
    public function setUp() :void
    {
         parent::setUp();
@@ -23,7 +23,8 @@ class GoalTrackingTest extends TestCase
             'role' => 'Owner'
         ]);
 
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $goalCategory = factory(GoalCategory::class)->create();
 
@@ -57,9 +58,12 @@ class GoalTrackingTest extends TestCase
     public function testStoreMethodGoalNotForUser()
     {
         $role = Role::firstOrCreate(['role' => 'Owner']);
-        $anotherUser = factory(User::class)->create(['role_id' => $role['id']]);
+        $anotherUser = factory(User::class)->create();
+        $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
         $goalId = $this->data['goal'][0]['id'];
         $data = ['amount_contributed' => 456676];
+
+
         $response = $this->getResponse('POST', "api/v1/goal/{$goalId}/tracking", $anotherUser['api_token'], $data);
         $response->assertStatus(403);
     }
@@ -70,6 +74,8 @@ class GoalTrackingTest extends TestCase
         $token = $this->data['user']['api_token'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
         $data = ['amount_contributed' => 456676, 'date_contributed' => '2005-01-30 00:00:01'];
+
+
         $response = $this->getResponse('PUT', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $token, $data);
         $response->assertStatus(200);
     }
@@ -77,10 +83,13 @@ class GoalTrackingTest extends TestCase
     public function testUpdateMethodGoalNotForUser()
     {
         $role = Role::firstOrCreate(['role' => 'Owner']);
-        $anotherUser = factory(User::class)->create(['role_id' => $role['id']]);
+        $anotherUser = factory(User::class)->create();
+        $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
         $goalId = $this->data['goal'][0]['id'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
         $data = ['amount_contributed' => 456676, 'date_contributed' => '2005-01-30 00:00:01'];
+
+
         $response = $this->getResponse('PUT', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $anotherUser['api_token'], $data);
         $response->assertStatus(403);
     }
@@ -90,6 +99,8 @@ class GoalTrackingTest extends TestCase
         $goalId = $this->data['goal'][0]['id'];
         $token = $this->data['user']['api_token'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
+
+
         $response = $this->getResponse('DELETE', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $token);
         $response->assertStatus(200);
     }
@@ -97,9 +108,12 @@ class GoalTrackingTest extends TestCase
     public function testDeleteMethodGoalNotForUser()
     {
         $role = Role::firstOrCreate(['role' => 'Owner']);
-        $anotherUser = factory(User::class)->create(['role_id' => $role['id']]);
+        $anotherUser = factory(User::class)->create();
+        $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
         $goalId = $this->data['goal'][0]['id'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
+
+
         $response = $this->getResponse('DELETE', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $anotherUser['api_token']);
         $response->assertStatus(403);
     }

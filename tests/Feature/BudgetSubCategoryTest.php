@@ -26,9 +26,10 @@ class BudgetSubCategoryTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
-            'role_id' => $role['id'],
             'email_verified_at' => now()
         ])->generateToken();
+
+        $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $category = Category::firstOrCreate([
             'title' => 'Test Category',
@@ -58,6 +59,7 @@ class BudgetSubCategoryTest extends TestCase
         $token = $this->data['user']['api_token'];
         $categoryId = $this->data['category']['id'];
 
+
         $response = $this->getResponse('POST', "api/v1/category/{$categoryId}/subcategory", $token, $data);
         $response->assertStatus(201);
     }
@@ -71,6 +73,7 @@ class BudgetSubCategoryTest extends TestCase
             'sub_title' => 'Updated Sub Category Test'
         ];
 
+
         $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $token, $data);
         $response->assertStatus(200);
         $this->forceDeleteSubCategory($subCategoryId);
@@ -82,6 +85,7 @@ class BudgetSubCategoryTest extends TestCase
         $token = $this->data['user']['api_token'];
         $subCategoryId = $this->createSubCategory()['id'];
         $categoryId = $this->data['category']['id'];
+
 
         $response = $this->getResponse('DELETE', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $token);
         $response->assertStatus(200);

@@ -20,7 +20,8 @@ class GoalTest extends TestCase
 
         $role = Role::create(['role' => 'Owner']);
 
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
         $goalCategory = factory(GoalCategory::class)->create();
 
         $goal = factory(Goal::class, 1)->create(['goal_categories_id' => $goalCategory['id'], 'user_id' => $user['id']]);
@@ -41,6 +42,8 @@ class GoalTest extends TestCase
     public function testIndexMethod()
     {
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('GET', 'api/v1/goal', $token);
         $response->assertStatus(200);
     }
@@ -48,7 +51,9 @@ class GoalTest extends TestCase
     public function testIndexMethodDifferentUserAccess()
     {
         $role = Role::firstOrCreate(['role' => 'Owner']);
-        $user2 = factory(User::class)->create(['role_id' => $role['id']]);
+        $user2 = factory(User::class)->create();
+        $user2->roles()->attach($role['id'], ['approved' => 1]);
+
         $response = $this->getResponse('GET', 'api/v1/goal', $user2['api_token']);
         $response->assertStatus(200);
         $response->assertExactJson([
@@ -62,8 +67,11 @@ class GoalTest extends TestCase
     public function testIndexMethodSuperAdminCanViewSpecificUserGoal()
     {
         $role = Role::firstOrCreate(['role' => 'Super admin']);
-        $superAdminUser = factory(User::class)->create(['role_id' => $role['id']]);
+        $superAdminUser = factory(User::class)->create();
+        $superAdminUser->roles()->attach($role['id'], ['approved' => 1]);
         $id = $this->data['user']['id'];
+
+
         $response = $this->getResponse('GET', "api/v1/goal?user_id={$id}", $superAdminUser['api_token']);
         $response->assertJson([]); //put in the json structure
         $response->assertStatus(200);
@@ -75,6 +83,8 @@ class GoalTest extends TestCase
         $userId = $this->data['user']['id'];
         $data = factory(Goal::class)->make(['user_id' => $userId, 'goal_categories_id' => $goalCategory['id']]);
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('POST', 'api/v1/goal', $token, $data->toArray());
         //assert that this user has 2 goals in the database
         $response->assertStatus(201);
@@ -90,6 +100,8 @@ class GoalTest extends TestCase
             'goal_categories_id' => $newGoalCategory['id']
         ];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('PUT', "api/v1/goal/{$id}", $token, $data);
         $response->assertStatus(200);
     }
@@ -97,7 +109,8 @@ class GoalTest extends TestCase
     public function testUpdateMethodUserDoesNotOwnThisGoal()
     {
         $role = Role::firstOrCreate(['role' => 'Owner']);
-        $anotherUser = factory(User::class)->create(['role_id' => $role['id']]);
+        $anotherUser = factory(User::class)->create();
+        $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
         $newGoalCategory = factory(GoalCategory::class)->create();
         $data = [
             'title' => 'updated title',
@@ -105,6 +118,8 @@ class GoalTest extends TestCase
             'goal_categories_id' => $newGoalCategory['id']
         ];
         $id = $this->data['goal'][0]['id'];
+
+
         $response = $this->getResponse('PUT', "api/v1/goal/{$id}",$anotherUser['api_token'], $data);
         $response->assertStatus(403);
     }
@@ -113,6 +128,8 @@ class GoalTest extends TestCase
     {
         $id = $this->data['goal'][0]['id'];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('GET', "api/v1/goal/{$id}", $token);
         $response->assertStatus(200);
 
@@ -121,9 +138,12 @@ class GoalTest extends TestCase
     public function testShowMethodSuperAdminCanGetSpecificUserGoal()
     {
         $role = Role::firstOrCreate(['role' => 'Super admin']);
-        $superAdmin = factory(User::class)->create(['role_id' => $role['id']]);
+        $superAdmin = factory(User::class)->create();
+        $superAdmin->roles()->attach($role['id'], ['approved' => 1]);
         $id = $this->data['goal'][0]['id'];
         $userId = $this->data['user']['id'];
+
+
         $response = $this->getResponse('GET', "api/v1/goal/{$id}?user_id=$userId", $superAdmin['api_token']);
         $response->assertStatus(200);
     }
@@ -132,6 +152,8 @@ class GoalTest extends TestCase
     {
         $id = 99999999;
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('GET', "api/v1/goal/{$id}", $token);
         $response->assertStatus(404);
     }
@@ -141,6 +163,8 @@ class GoalTest extends TestCase
     {
         $id = $this->data['goal'][0]['id'];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('DELETE', "api/v1/goal/{$id}", $token);
         $response->assertStatus(200);
     }
@@ -149,7 +173,9 @@ class GoalTest extends TestCase
     {
         $id = $this->data['goal'][0]['id'];
         $role = Role::firstOrCreate(['role' => 'Owner']);
-        $anotherUser = factory(User::class)->create(['role_id' => $role['id']]);
+        $anotherUser = factory(User::class)->create();
+        $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
+
         $response = $this->getResponse('DELETE', "api/v1/goal/{$id}", $anotherUser['api_token']);
         $response->assertStatus(403);
     }

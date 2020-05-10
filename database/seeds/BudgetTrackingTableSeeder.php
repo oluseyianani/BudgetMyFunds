@@ -14,7 +14,7 @@ class BudgetTrackingTableSeeder extends Seeder
      */
     public function run()
     {
-        Budget::take(1)->each(function ($budget) {
+        Budget::all()->each(function ($budget) {
             $spender = User::inRandomOrder()->limit(1)->get('id');
             factory(BudgetTracking::class, 5)->create(['spender' => $spender[0]['id'], 'budget_id' => $budget['id']]);
         });

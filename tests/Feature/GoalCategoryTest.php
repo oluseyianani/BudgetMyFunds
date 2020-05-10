@@ -24,9 +24,10 @@ class GoalCategoryTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
-            'role_id' => $role['id'],
             'email_verified_at' => now()
         ])->generateToken();
+
+        $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $goalCategory = GoalCategory::firstOrCreate([
             'title' => 'Test Business'
@@ -48,6 +49,8 @@ class GoalCategoryTest extends TestCase
     public function testIndexMethod()
     {
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('GET', 'api/v1/goal/category', $token);
         $response->assertStatus(200);
     }
@@ -55,7 +58,10 @@ class GoalCategoryTest extends TestCase
     public function testIndexMethodNonAdminUser()
     {
         $role = Role::create(['role' => 'Owner']);
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
+
+
         $response = $this->getResponse('GET', 'api/v1/goal/category', $user['api_token']);
         $response->assertStatus(403);
     }
@@ -66,6 +72,8 @@ class GoalCategoryTest extends TestCase
             'title' => 'Test Goal Category',
         ];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('POST', 'api/v1/goal/category', $token, $data);
         $response->assertStatus(201);
     }
@@ -73,11 +81,14 @@ class GoalCategoryTest extends TestCase
     public function testStoreMethodNonAdminUser()
     {
         $role = Role::create(['role' => 'Owner']);
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $data = [
             'title' => 'Test Goal Category2',
         ];
+
+
         $response = $this->getResponse('POST', 'api/v1/goal/category', $user['api_token'], $data);
         $response->assertStatus(403);
     }
@@ -86,6 +97,8 @@ class GoalCategoryTest extends TestCase
     {
         $id = $this->data['goalCategory']['id'];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('GET', "api/v1/goal/category/{$id}", $token);
         $response->assertStatus(200);
     }
@@ -93,8 +106,11 @@ class GoalCategoryTest extends TestCase
     public function testShowMethodNonAdminUser()
     {
         $role = Role::create(['role' => 'Owner']);
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
         $id = $this->data['goalCategory']['id'];
+
+
         $response = $this->getResponse('GET', "api/v1/goal/category/{$id}", $user['api_token']);
         $response->assertStatus(403);
     }
@@ -106,6 +122,8 @@ class GoalCategoryTest extends TestCase
             'title' => 'updated Goal category'
         ];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}",$token, $data);
         $response->assertStatus(200);
     }
@@ -117,7 +135,10 @@ class GoalCategoryTest extends TestCase
             'title' => 'updated Goal category'
         ];
         $role = Role::create(['role' => 'Owner']);
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
+
+
         $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}",$user['api_token'], $data);
         $response->assertStatus(403);
     }
@@ -134,7 +155,10 @@ class GoalCategoryTest extends TestCase
     {
         $id = $this->data['goalCategory']['id'];
         $role = Role::create(['role' => 'Owner']);
-        $user = factory(User::class)->create(['role_id' => $role['id']]);
+        $user = factory(User::class)->create();
+        $user->roles()->attach($role['id'], ['approved' => 1]);
+
+        
         $response = $this->getResponse('DELETE', "api/v1/goal/category/{$id}", $user['api_token']);
         $response->assertStatus(403);
     }

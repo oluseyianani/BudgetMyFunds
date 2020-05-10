@@ -26,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $model = new static();
         return "{$model->getConnectionName()}.{$model->getTable()}";
     }
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -57,7 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Eagerloads role on User request
      */
-    protected $with = ['role'];
+    protected $with = ['roles'];
 
 
     /**
@@ -90,29 +90,29 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Ges user role.
      */
-    public function role()
+    public function roles()
     {
-        return $this->hasOne(Role::class, 'id', 'role_id');
+        return $this->belongsToMany(Role::class)->withTimestamps()->withPivot(['approved']);
     }
 
     public function isOwner()
     {
-        return $this->role->role === 'Owner';
+        return in_array('Owner', collect($this->roles)->pluck('role')->toArray());
     }
 
     public function isAdmin()
     {
-        return $this->role->role === 'Admin';
+        return in_array('Admin', collect($this->roles)->pluck('role')->toArray());
     }
 
     public function isCollaborator()
     {
-        return $this->role->role === 'Collaborator';
+        return in_array('Collaborator', collect($this->roles)->pluck('role')->toArray());
     }
 
     public function isSuperAdmin()
     {
-        return $this->role->role === 'Super admin';
+        return in_array('Super admin', collect($this->roles)->pluck('role')->toArray());
     }
 
     public function userProfile()
@@ -120,4 +120,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserProfile::class, 'user_id');
     }
 
+    public function approvedRoles()
+    {
+        return $this->belongsToMany(Role::class)->wherePivot('approved', 1);
+    }
 }
