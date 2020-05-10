@@ -13,10 +13,10 @@ class SubCategoryTableSeeder extends Seeder
      */
     public function run()
     {
-       Category::all()->each(function($category) {
-            for($i = 0; $i <3; $i++) {
+        Category::all()->each(function ($category) {
+            for ($i = 0; $i <2; $i++) {
                 $category->subcategory()->create(factory(SubCategory::class)->make()->toArray());
             }
-       });
+        });
     }
 }

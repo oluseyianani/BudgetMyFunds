@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 
 $factory->define(SubCategory::class, function (Faker $faker) {
     return [
-        'sub_title' => $faker->unique()->word,
+        'sub_title' => $faker->unique()->sentence(2, false),
         'category_id' => factory(Category::class)->make()->id
     ];
 });
