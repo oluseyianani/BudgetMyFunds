@@ -26,9 +26,10 @@ class BudgetTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
-            'role_id' => $role['id'],
             'email_verified_at' => now()
         ])->generateToken();
+
+        $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $category = Category::firstOrCreate([
             'title' => 'Test Category',
@@ -67,6 +68,8 @@ class BudgetTest extends TestCase
     public function testIndexMethod()
     {
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('GET', 'api/v1/budget', $token);
         $response->assertStatus(200);
     }
@@ -78,6 +81,8 @@ class BudgetTest extends TestCase
         $userId = $this->data['user']['id'];
         $data = factory(Budget::class)->make(['user_id'=> $userId, 'category_id' => $budgetCategory, 'sub_category_id' => $budgetSubCategory['id']]);
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('POST', 'api/v1/budget', $token, $data->toArray());
         $response->assertStatus(201);
     }
@@ -97,6 +102,8 @@ class BudgetTest extends TestCase
             'user_id'=> $userId
         ];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('PUT', "api/v1/budget/{$id}", $token, $data);
         $response->assertStatus(200);
     }
@@ -105,6 +112,8 @@ class BudgetTest extends TestCase
     {
         $id = $this->data['budget']['id'];
         $token = $this->data['user']['api_token'];
+
+
         $response = $this->getResponse('DELETE', "api/v1/budget/{$id}", $token);
         $response->assertStatus(200);
     }

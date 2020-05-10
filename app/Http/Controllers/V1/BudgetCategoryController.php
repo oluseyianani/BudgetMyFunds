@@ -10,7 +10,6 @@ use App\Repositories\V1\BudgetCategoryRepository;
 
 class BudgetCategoryController extends Controller
 {
-
     protected $budgetCategory;
 
     public function __construct(BudgetCategoryRepository $budgetCategoryRepository)

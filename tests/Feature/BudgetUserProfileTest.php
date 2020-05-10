@@ -23,9 +23,10 @@ class BudgetUserProfileTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
-            'role_id' => $role['id'],
             'email_verified_at' => now()
         ])->generateToken();
+
+        $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $this->data = [
             'user' => $user,

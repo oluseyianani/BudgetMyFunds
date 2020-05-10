@@ -15,7 +15,7 @@ class BudgetTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $randomCategory = Category::inRandomOrder()->limit(1)->get('id');
             $randomSubCategory = SubCategory::inRandomOrder()->limit(1)->get('id');
 

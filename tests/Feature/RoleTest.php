@@ -18,7 +18,6 @@ class RoleTest extends TestCase
 
         $role = Role::firstOrCreate([
             'role' => 'Test Role',
-
         ]);
 
         $this->role = $role;

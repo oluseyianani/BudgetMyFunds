@@ -43,7 +43,9 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-            return User::create($data);
+            $user = User::create($data);
+            $user->roles()->attach(1, ['approved' => 1]);
+            return $user;
         } catch (Exception $e) {
             return formatResponse(fetchErrorCode($e), get_class($e) . ": " . $e->getMessage());
         }
