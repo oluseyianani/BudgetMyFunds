@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserCategoryTableSeeder::class);
         $this->call(BudgetTableSeeder::class);
         $this->call(BudgetTrackingTableSeeder::class);
+        $this->call(MonthlyIncomeTableSeeder::class);
     }
 }
