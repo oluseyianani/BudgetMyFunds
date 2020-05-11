@@ -14,7 +14,7 @@ class MonthlyIncomeTableSeeder extends Seeder
     public function run()
     {
         $budgets = Budget::all()->each(function ($budget) {
-            factory(MonthlyIncome::class, 2)->create([
+            factory(MonthlyIncome::class, 5)->create([
                 'beneficiary' => $budget['user_id'],
                 'creator' => $budget['user_id'],
                 'date_received' => $budget['budget_for_month'],
