@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->connection = env('APP_ENV') === 'testing' ? 'sqlite' : 'mysql';
+        $this->connection = env('APP_ENV') === 'testing' ? 'sqlite' : env('DB_CONNECTION');
     }
 
     public static function getFullTableName()
@@ -18,6 +17,4 @@ class BaseModel extends Model
         $model = new static();
         return "{$model->getConnectionName()}.{$model->getTable()}";
     }
-
-
 }
