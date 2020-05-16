@@ -24,6 +24,7 @@ class GoalCategoryTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
+            'phone' => '+23409012345534',
             'email_verified_at' => now()
         ])->generateToken();
 
@@ -124,7 +125,7 @@ class GoalCategoryTest extends TestCase
         $token = $this->data['user']['api_token'];
 
 
-        $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}",$token, $data);
+        $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}", $token, $data);
         $response->assertStatus(200);
     }
 
@@ -139,7 +140,7 @@ class GoalCategoryTest extends TestCase
         $user->roles()->attach($role['id'], ['approved' => 1]);
 
 
-        $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}",$user['api_token'], $data);
+        $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}", $user['api_token'], $data);
         $response->assertStatus(403);
     }
 
@@ -158,9 +159,8 @@ class GoalCategoryTest extends TestCase
         $user = factory(User::class)->create();
         $user->roles()->attach($role['id'], ['approved' => 1]);
 
-        
+
         $response = $this->getResponse('DELETE', "api/v1/goal/category/{$id}", $user['api_token']);
         $response->assertStatus(403);
     }
-
 }

@@ -5,14 +5,13 @@ namespace App\Http\Controllers\V1\Auth;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateLoginRequest;
+use App\Http\Requests\CreateMobileLoginRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-
-
     use AuthenticatesUsers;
     /*
     |--------------------------------------------------------------------------
@@ -60,7 +59,6 @@ class LoginController extends Controller
      */
     public function login(CreateLoginRequest $request)
     {
-
         try {
             if ($this->attemptLogin($request)) {
                 $user = $this->guard()->user();
@@ -69,7 +67,7 @@ class LoginController extends Controller
                 return formatResponse(200, 'Successfully logged in', true, $user);
             }
 
-            return $this->sendApiFailedLoginResponse($request);
+            return $this->sendApiFailedLoginResponse();
         } catch (Exception $e) {
             return formatResponse(fetchErrorCode($e), get_class($e) . ": " . $e->getMessage());
         }
@@ -78,11 +76,49 @@ class LoginController extends Controller
     /**
      * Sends an API response on failed login attempt
      *
-     * @param App\Http\Requests\Request $request
      * @return json
      */
-    public function sendApiFailedLoginResponse(Request $request)
+    public function sendApiFailedLoginResponse()
     {
         return formatResponse(400, 'Email or Password Invalid', false);
+    }
+
+    public function mobileLogin(CreateMobileLoginRequest $request)
+    {
+        if ($this->attemptMobileLogin($request)) {
+            return $this->sendLoginMobileResponse();
+        }
+
+        return $this->sendFailedLoginMobileResponse();
+    }
+
+    protected function attemptMobileLogin(Request $request)
+    {
+        return $this->guard()->attempt(
+            $this->mobileCredentials($request)
+        );
+    }
+
+    protected function mobileCredentials(Request $request)
+    {
+        return $request->only($this->phoneNumber(), 'password');
+    }
+
+    protected function phoneNumber()
+    {
+        return 'phone';
+    }
+
+    protected function sendLoginMobileResponse()
+    {
+        $user = $this->guard()->user();
+        $user->generateToken();
+
+        return formatResponse(200, 'Successfully logged in', true, $user);
+    }
+
+    protected function sendFailedLoginMobileResponse()
+    {
+        return formatResponse(400, 'Phone or Password Invalid', false);
     }
 }

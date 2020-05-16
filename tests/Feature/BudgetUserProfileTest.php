@@ -23,6 +23,7 @@ class BudgetUserProfileTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
+            'phone' => '+23409012345534',
             'email_verified_at' => now()
         ])->generateToken();
 
@@ -31,7 +32,6 @@ class BudgetUserProfileTest extends TestCase
         $this->data = [
             'user' => $user,
         ];
-
     }
 
     public function getResponse($method, $url, $token, $data = [])
@@ -84,5 +84,4 @@ class BudgetUserProfileTest extends TestCase
         $response = $this->getResponse('GET', "api/v1/profile/{$userId}", $token);
         $response->assertStatus(200);
     }
-
 }

@@ -26,6 +26,7 @@ class BudgetSubCategoryTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
+            'phone' => '+23409012345534',
             'email_verified_at' => now()
         ])->generateToken();
 
@@ -40,7 +41,6 @@ class BudgetSubCategoryTest extends TestCase
             'user' => $user,
             'category' => $category
         ];
-
     }
 
     public function getResponse($method, $url, $token, $data = [])
@@ -77,7 +77,6 @@ class BudgetSubCategoryTest extends TestCase
         $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/subcategory/{$subCategoryId}", $token, $data);
         $response->assertStatus(200);
         $this->forceDeleteSubCategory($subCategoryId);
-
     }
 
     public function testDeleteMethod()
@@ -103,5 +102,4 @@ class BudgetSubCategoryTest extends TestCase
     {
         return SubCategory::find($subCategoryId)->forceDelete();
     }
-
 }
