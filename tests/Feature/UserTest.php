@@ -26,7 +26,6 @@ class UserTest extends TestCase
         $this->data = [
             'user' => $user
         ];
-
     }
 
     public function getResponse($method, $url, $data = [])
@@ -40,7 +39,9 @@ class UserTest extends TestCase
             'email' => 'test@email.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-            'phone_number' => 9012345678
+            'phone' => '+23409012345678',
+            'code' => '123456',
+            'isVerified' => true
         ];
 
 
@@ -55,7 +56,18 @@ class UserTest extends TestCase
             'password' => 'password' // from factory
         ];
 
-        $response = $this->getResponse('POST', 'api/v1/auth/login', $userData);
+        $response = $this->getResponse('POST', 'api/v1/auth/email-login', $userData);
+        $response->assertStatus(200);
+    }
+
+    public function testMobileLoginMethod()
+    {
+        $userData = [
+            'phone' => $this->data['user']['phone'],
+            'password' => 'password' // from factory
+        ];
+
+        $response = $this->getResponse('POST', 'api/v1/auth/mobile-login', $userData);
         $response->assertStatus(200);
     }
 }

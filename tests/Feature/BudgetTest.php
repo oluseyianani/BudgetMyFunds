@@ -26,6 +26,7 @@ class BudgetTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
+            'phone' => '+23409012345534',
             'email_verified_at' => now()
         ])->generateToken();
 

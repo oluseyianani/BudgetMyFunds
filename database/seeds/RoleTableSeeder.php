@@ -15,7 +15,7 @@ class RoleTableSeeder extends Seeder
         $roles = ['Owner', 'Collaborator', 'Admin', 'Super admin'];
 
         foreach ($roles as $role) {
-            Role::create([
+            Role::firstOrCreate([
                 'role' => $role
             ]);
         }

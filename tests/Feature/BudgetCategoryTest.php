@@ -24,6 +24,7 @@ class BudgetCategoryTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
+            'phone' => '+23409012345534',
             'email_verified_at' => now()
         ])->generateToken();
 
@@ -88,7 +89,7 @@ class BudgetCategoryTest extends TestCase
         $token = $this->data['user']['api_token'];
 
 
-        $response = $this->getResponse('PUT', "api/v1/category/{$id}",$token, $data);
+        $response = $this->getResponse('PUT', "api/v1/category/{$id}", $token, $data);
         $response->assertStatus(200);
     }
 

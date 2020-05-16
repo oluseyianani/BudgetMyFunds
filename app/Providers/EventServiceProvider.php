@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
+use App\Events\RegistrationCodeCreated;
+use App\Listeners\SendUserRegistrationCode;
 use App\Listeners\SendApiEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendApiEmailVerificationNotification::class,
+        ],
+        RegistrationCodeCreated::class => [
+            SendUserRegistrationCode::class
         ],
     ];
 

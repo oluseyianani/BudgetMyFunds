@@ -22,7 +22,10 @@ Route::prefix('v1')->middleware('cors')->group(function () {
     Route::post('/auth/register', 'Auth\RegisterController@register');
     Route::get('email/verify/{id}', 'VerificationApiController@verify')->name('verificationapi.verify');
     Route::get('email/resend', 'VerificationApiController@resend')->name('verificationapi.resend');
-    Route::post('/auth/login', 'Auth\LoginController@login');
+    Route::post('/auth/email-login', 'Auth\LoginController@login');
+    Route::post('auth/mobile-login', 'Auth\LoginController@mobileLogin');
+    Route::post('auth/registration-code', 'Auth\RegisterController@getCode');
+    Route::post('auth/validate-code', 'Auth\RegisterController@validateCode');
 
     Route::middleware('auth:api', 'verified')->prefix('category')->group(function () {
         Route::get('', 'BudgetCategoryController@index');

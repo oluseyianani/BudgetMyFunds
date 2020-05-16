@@ -12,7 +12,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BudgetUserCategoryTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function setUp() :void
@@ -26,6 +25,7 @@ class BudgetUserCategoryTest extends TestCase
         $user = User::firstOrCreate([
             'email' => 'test@test.com',
             'password' => 'password123',
+            'phone' => '+23409012345534',
             'email_verified_at' => now()
         ])->generateToken();
 
@@ -40,7 +40,6 @@ class BudgetUserCategoryTest extends TestCase
             'user' => $user,
             'category' => $category
         ];
-
     }
 
     public function getResponse($method, $url, $token, $data = [])
@@ -75,7 +74,6 @@ class BudgetUserCategoryTest extends TestCase
         $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/usercategory/{$userCategoryId}", $token, $data);
         $response->assertStatus(200);
         $this->forceDeleteSubCategory($userCategoryId);
-
     }
 
     public function testDeleteMethod()
