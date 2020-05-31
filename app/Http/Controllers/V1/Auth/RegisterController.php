@@ -154,8 +154,7 @@ class RegisterController extends Controller
         $user->generateToken();
 
         $user->roles()->attach(1, ['approved' => 1]);
-
-        return formatResponse(201, 'Registered', true, $user->toArray());
+        return formatResponse(201, 'Registered', true, $user->only(['id', 'email', 'phone', 'email_verified_at', 'api_token', 'created_at']));
     }
 
     /**
