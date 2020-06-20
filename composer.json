@@ -9,14 +9,16 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "beyondcode/laravel-websockets": "^1.4",
         "darkaonline/l5-swagger": "^6.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "fzaninotto/faker": "^1.4",
         "laravel/framework": "^6.2",
-        "laravel/telescope": "^3.1",
+        "laravel/telescope": "^3.5",
         "laravel/tinker": "^2.0",
         "predis/predis": "^1.1",
+        "pusher/pusher-php-server": "^4.1",
         "twilio/sdk": "^6.4",
         "zircote/swagger-php": "2.*"
     },

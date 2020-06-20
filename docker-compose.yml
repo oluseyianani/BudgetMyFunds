@@ -18,6 +18,7 @@ services:
       - mysql
       - redis
       - sqlite3
+      # - websockets
     networks:
       - laravel
 
@@ -53,6 +54,7 @@ services:
       - ./phpdocker/php/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
     ports:
       - "9000:9000"
+      - "6001:6001"
     networks:
       - laravel
 
@@ -72,3 +74,17 @@ services:
       - .:/application
     ports:
       - "43306:4306"
+
+  # websockets:
+  #   build:
+  #     context: .
+  #     dockerfile: ./phpdocker/php/sockets.Dockerfile
+  #   container_name: websockets
+  #   volumes:
+  #     - .:/application
+  #   networks:
+  #     laravel:
+  #       aliases:
+  #         - websockets
+  #   ports:
+  #     - 6001:6001
