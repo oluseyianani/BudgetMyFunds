@@ -5,31 +5,27 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
+use Tests\SetupHelper;
 use App\Models\Category;
 use App\Models\UserCategory;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BudgetUserCategoryTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, SetupHelper;
 
     public function setUp() :void
     {
         parent::setUp();
 
-        $role = Role::create([
-            'role' => 'Owner'
-        ]);
+        Artisan::call("passport:install");
 
-        $user = User::firstOrCreate([
-            'email' => 'test@test.com',
-            'password' => 'password123',
-            'phone' => '+23409012345534',
-            'email_verified_at' => now()
-        ])->generateToken();
+        $user = $this->createUserWithRole('Owner');
 
-        $user->roles()->attach($role['id'], ['approved' => 1]);
+        Passport::actingAs($user);
 
         $category = Category::firstOrCreate([
             'title' => 'Test Category',
@@ -42,23 +38,15 @@ class BudgetUserCategoryTest extends TestCase
         ];
     }
 
-    public function getResponse($method, $url, $token, $data = [])
-    {
-        return $this->withHeaders([
-            'Authorization' => "Bearer " . $token,
-        ])->json($method, $url, $data);
-    }
-
     public function testStoreMethod()
     {
         $data = [
             'title' => 'My category test'
         ];
 
-        $token = $this->data['user']['api_token'];
         $categoryId = $this->data['category']['id'];
 
-        $response = $this->getResponse('POST', "api/v1/category/{$categoryId}/usercategory", $token, $data);
+        $response = $this->post("api/v1/category/{$categoryId}/usercategory", $data);
         $response->assertStatus(201);
     }
 
@@ -66,23 +54,21 @@ class BudgetUserCategoryTest extends TestCase
     {
         $userCategoryId = $this->createUserCategory()["id"];
         $categoryId = $this->data['category']['id'];
-        $token = $this->data['user']['api_token'];
         $data = [
             'title' => 'Updated User Category Test'
         ];
 
-        $response = $this->getResponse('PUT', "api/v1/category/{$categoryId}/usercategory/{$userCategoryId}", $token, $data);
+        $response = $this->put("api/v1/category/{$categoryId}/usercategory/{$userCategoryId}", $data);
         $response->assertStatus(200);
         $this->forceDeleteSubCategory($userCategoryId);
     }
 
     public function testDeleteMethod()
     {
-        $token = $this->data['user']['api_token'];
         $userCategoryId = $this->createUserCategory()['id'];
         $categoryId = $this->data['category']['id'];
 
-        $response = $this->getResponse('DELETE', "api/v1/category/{$categoryId}/usercategory/{$userCategoryId}", $token);
+        $response = $this->delete("api/v1/category/{$categoryId}/usercategory/{$userCategoryId}");
         $response->assertStatus(200);
     }
 

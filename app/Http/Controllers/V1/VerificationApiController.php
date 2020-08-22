@@ -7,12 +7,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\VerifiesEmails;
 
 class VerificationApiController extends Controller
 {
-    use VerifiesEmails;
-
+ 
     /**
     * Show the email verification notice.
     *

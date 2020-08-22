@@ -5,30 +5,26 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
+use Tests\SetupHelper;
 use App\Models\GoalCategory;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GoalCategoryTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, SetupHelper;
 
     public function setUp() :void
     {
         parent::setUp();
 
-        $role = Role::create([
-            'role' => 'Admin'
-        ]);
+        Artisan::call("passport:install");
 
-        $user = User::firstOrCreate([
-            'email' => 'test@test.com',
-            'password' => 'password123',
-            'phone' => '+23409012345534',
-            'email_verified_at' => now()
-        ])->generateToken();
+        $user = $this->createUserWithRole('Admin');
 
-        $user->roles()->attach($role['id'], ['approved' => 1]);
+        Passport::actingAs($user);
 
         $goalCategory = GoalCategory::firstOrCreate([
             'title' => 'Test Business'
@@ -40,19 +36,10 @@ class GoalCategoryTest extends TestCase
         ];
     }
 
-    public function getResponse($method, $url, $token, $data = [])
-    {
-        return $this->withHeaders([
-            'Authorization' => "Bearer " . $token,
-        ])->json($method, $url, $data);
-    }
-
     public function testIndexMethod()
     {
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('GET', 'api/v1/goal/category', $token);
+        $response = $this->get('api/v1/goal/category');
         $response->assertStatus(200);
     }
 
@@ -60,10 +47,13 @@ class GoalCategoryTest extends TestCase
     {
         $role = Role::create(['role' => 'Owner']);
         $user = factory(User::class)->create();
+
+        Passport::actingAs($user);
+
         $user->roles()->attach($role['id'], ['approved' => 1]);
 
 
-        $response = $this->getResponse('GET', 'api/v1/goal/category', $user['api_token']);
+        $response = $this->get('api/v1/goal/category');
         $response->assertStatus(403);
     }
 
@@ -72,10 +62,8 @@ class GoalCategoryTest extends TestCase
         $data = [
             'title' => 'Test Goal Category',
         ];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('POST', 'api/v1/goal/category', $token, $data);
+        $response = $this->post('api/v1/goal/category', $data);
         $response->assertStatus(201);
     }
 
@@ -83,6 +71,9 @@ class GoalCategoryTest extends TestCase
     {
         $role = Role::create(['role' => 'Owner']);
         $user = factory(User::class)->create();
+
+        Passport::actingAs($user);
+
         $user->roles()->attach($role['id'], ['approved' => 1]);
 
         $data = [
@@ -90,17 +81,15 @@ class GoalCategoryTest extends TestCase
         ];
 
 
-        $response = $this->getResponse('POST', 'api/v1/goal/category', $user['api_token'], $data);
+        $response = $this->post('api/v1/goal/category', $data);
         $response->assertStatus(403);
     }
 
     public function testShowMethod()
     {
         $id = $this->data['goalCategory']['id'];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('GET', "api/v1/goal/category/{$id}", $token);
+        $response = $this->get("api/v1/goal/category/{$id}");
         $response->assertStatus(200);
     }
 
@@ -108,11 +97,14 @@ class GoalCategoryTest extends TestCase
     {
         $role = Role::create(['role' => 'Owner']);
         $user = factory(User::class)->create();
+
+        Passport::actingAs($user);
+
         $user->roles()->attach($role['id'], ['approved' => 1]);
         $id = $this->data['goalCategory']['id'];
 
 
-        $response = $this->getResponse('GET', "api/v1/goal/category/{$id}", $user['api_token']);
+        $response = $this->get("api/v1/goal/category/{$id}");
         $response->assertStatus(403);
     }
 
@@ -122,10 +114,8 @@ class GoalCategoryTest extends TestCase
         $data = [
             'title' => 'updated Goal category'
         ];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}", $token, $data);
+        $response = $this->put("api/v1/goal/category/{$id}", $data);
         $response->assertStatus(200);
     }
 
@@ -137,18 +127,19 @@ class GoalCategoryTest extends TestCase
         ];
         $role = Role::create(['role' => 'Owner']);
         $user = factory(User::class)->create();
+
+        Passport::actingAs($user);
         $user->roles()->attach($role['id'], ['approved' => 1]);
 
 
-        $response = $this->getResponse('PUT', "api/v1/goal/category/{$id}", $user['api_token'], $data);
+        $response = $this->put("api/v1/goal/category/{$id}", $data);
         $response->assertStatus(403);
     }
 
     public function testDeleteMethod()
     {
         $id = $this->data['goalCategory']['id'];
-        $token = $this->data['user']['api_token'];
-        $response = $this->getResponse('DELETE', "api/v1/goal/category/{$id}", $token);
+        $response = $this->delete("api/v1/goal/category/{$id}");
         $response->assertStatus(200);
     }
 
@@ -157,10 +148,11 @@ class GoalCategoryTest extends TestCase
         $id = $this->data['goalCategory']['id'];
         $role = Role::create(['role' => 'Owner']);
         $user = factory(User::class)->create();
+
+        Passport::actingAs($user);
         $user->roles()->attach($role['id'], ['approved' => 1]);
 
-
-        $response = $this->getResponse('DELETE', "api/v1/goal/category/{$id}", $user['api_token']);
+        $response = $this->delete("api/v1/goal/category/{$id}");
         $response->assertStatus(403);
     }
 }

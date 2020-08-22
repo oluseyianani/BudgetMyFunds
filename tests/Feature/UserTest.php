@@ -5,16 +5,21 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
+use Tests\SetupHelper;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, SetupHelper;
 
     public function setUp() :void
     {
         parent::setUp();
+
+        Artisan::call("passport:install");
 
         $role = Role::create([
             'role' => 'Owner'
@@ -38,10 +43,7 @@ class UserTest extends TestCase
         $userData = [
             'email' => 'test@email.com',
             'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'phone' => '+23409012345678',
-            'code' => '123456',
-            'isVerified' => true
+            'password_confirmation' => 'password123'
         ];
 
 
@@ -51,23 +53,31 @@ class UserTest extends TestCase
 
     public function testLoginMethod()
     {
+        $user = $this->createUserWithRole('Owner');
+     
         $userData = [
-            'email' => $this->data['user']['email'],
-            'password' => 'password' // from factory
+            'email' => $user['email'],
+            'password' => 'password123'
         ];
 
-        $response = $this->getResponse('POST', 'api/v1/auth/email-login', $userData);
+        
+        $response = $this->post('api/v1/auth/login', $userData);
         $response->assertStatus(200);
     }
 
-    public function testMobileLoginMethod()
+    public function testLogoutMethod()
     {
-        $userData = [
-            'phone' => $this->data['user']['phone'],
-            'password' => 'password' // from factory
-        ];
+        Passport::actingAs($this->data['user']);
 
-        $response = $this->getResponse('POST', 'api/v1/auth/mobile-login', $userData);
+        $response = $this->post('api/v1/auth/logout');
+        $response->assertStatus(200);
+    }
+
+    public function testLogoutAllDevicesMethod()
+    {
+        Passport::actingAs($this->data['user']);
+
+        $response = $this->post('api/v1/auth/logout/all-device');
         $response->assertStatus(200);
     }
 }

@@ -19,7 +19,7 @@ class CreateUserProfilesTable extends Migration
             $table->string('photo_url')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->enum('gender', ['M', 'F'])->nullable();
+            $table->enum('gender', ['M', 'F', 'Others'])->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('postal_address')->nullable();
             $table->timestamps();

@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Role;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
 use App\Notifications\VerifyApiEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes, HasApiTokens;
 
     public function __construct(array $attributes = [])
     {
@@ -33,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'email', 'phone', 'password', 'email_verified_at',
+        'email', 'password', 'email_verified_at',
     ];
 
     /**
@@ -42,7 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+       'password', 'remember_token', 'deleted_at'
     ];
 
     /**
@@ -61,14 +63,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
     /**
-     * generates a new token for user
-    */
-    public function generateToken()
+     * Mutator
+     *
+     * @param string $password
+     * @return void
+     */
+    public function setPasswordAttribute($password)
     {
-        $this->api_token = Str::random(60);
-        $this->save();
-
-        return $this;
+        $this->attributes['password'] = Hash::make($password);
     }
 
     /**
@@ -95,31 +97,61 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Role::class)->withTimestamps()->withPivot(['approved']);
     }
 
+    /**
+     * Checks isOwner Role
+     *
+     * @return boolean
+     */
     public function isOwner()
     {
         return in_array('Owner', collect($this->roles)->pluck('role')->toArray());
     }
 
+    /**
+     * Checks for isAdmin Role
+     *
+     * @return boolean
+     */
     public function isAdmin()
     {
         return in_array('Admin', collect($this->roles)->pluck('role')->toArray());
     }
 
+    /**
+     * Checks for isCollaborator Role
+     *
+     * @return boolean
+     */
     public function isCollaborator()
     {
         return in_array('Collaborator', collect($this->roles)->pluck('role')->toArray());
     }
 
+    /**
+     * Checks for isSuperAdmin Role
+     *
+     * @return boolean
+     */
     public function isSuperAdmin()
     {
         return in_array('Super admin', collect($this->roles)->pluck('role')->toArray());
     }
 
+    /**
+     * Relations with User Profile
+     *
+     * @return Builder
+     */
     public function userProfile()
     {
         return $this->hasOne(UserProfile::class, 'user_id');
     }
 
+    /**
+     * Filters Roles Relations for Approved roles
+     *
+     * @return Builder
+     */
     public function approvedRoles()
     {
         return $this->belongsToMany(Role::class)->wherePivot('approved', 1);

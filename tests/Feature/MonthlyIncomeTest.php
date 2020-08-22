@@ -5,30 +5,26 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
+use Tests\SetupHelper;
 use App\Models\MonthlyIncome;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MonthlyIncomeTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, SetupHelper;
 
     public function setUp():void
     {
         parent::setUp();
 
-        $role = Role::create([
-            'role' => 'Owner'
-        ]);
+        Artisan::call("passport:install");
 
-        $user = User::firstOrCreate([
-            'email' => 'test@test.com',
-            'password' => 'password123',
-            'phone' => '+23409012345534',
-            'email_verified_at' => now()
-        ])->generateToken();
+        $user = $this->createUserWithRole('Owner');
 
-        $user->roles()->attach($role['id'], ['approved' => 1]);
+        Passport::actingAs($user);
 
         $monthlyIncome = factory(MonthlyIncome::class)->create([
             'beneficiary' => $user['id'],
@@ -41,19 +37,9 @@ class MonthlyIncomeTest extends TestCase
         ];
     }
 
-    public function getResponse($method, $url, $token, $data = [])
-    {
-        return $this->withHeaders([
-            'Authorization' => "Bearer " . $token,
-        ])->json($method, $url, $data);
-    }
-
     public function testIndexMethod()
     {
-        $token = $this->data['user']['api_token'];
-
-
-        $response = $this->getResponse('GET', 'api/v1/income', $token);
+        $response = $this->get('api/v1/income');
         $response->assertStatus(200);
     }
 
@@ -63,10 +49,9 @@ class MonthlyIncomeTest extends TestCase
             'beneficiary' => $this->data['user']['id'],
             'creator' => $this->data['user']['id']
         ]);
-        $token = $this->data['user']['api_token'];
 
 
-        $response = $this->getResponse('POST', 'api/v1/income', $token, $monthlyIncome->toArray());
+        $response = $this->post('api/v1/income', $monthlyIncome->toArray());
         $response->assertStatus(201);
     }
 
@@ -80,20 +65,16 @@ class MonthlyIncomeTest extends TestCase
             'beneficiary'=> $userId,
             'income_source' => 'Test Source'
         ];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('PUT', "api/v1/income/{$id}", $token, $data);
+        $response = $this->put("api/v1/income/{$id}", $data);
         $response->assertStatus(200);
     }
 
     public function testDeleteMethod()
     {
         $id = $this->data['monthlyIncome']['id'];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('DELETE', "api/v1/income/{$id}", $token);
+        $response = $this->delete("api/v1/income/{$id}");
         $response->assertStatus(200);
     }
 }
