@@ -6,51 +6,30 @@ use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Budget;
+use Tests\SetupHelper;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\BudgetTracking;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BudgetTrackingTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, SetupHelper;
 
     public function setUp():void
     {
         parent::setUp();
 
-        $role = Role::create([
-            'role' => 'Owner'
-        ]);
+        Artisan::call("passport:install");
 
-        $user = User::firstOrCreate([
-            'email' => 'test@test.com',
-            'password' => 'password123',
-            'phone' => '+23409012345534',
-            'email_verified_at' => now()
-        ])->generateToken();
+        $user = $this->createUserWithRole('Admin');
 
-        $user->roles()->attach($role['id'], ['approved' => 1]);
+        Passport::actingAs($user);
 
-        $category = Category::firstOrCreate([
-            'title' => 'Test Category',
-            'creator' =>$user['id']
-        ]);
-
-        $subCategory = SubCategory::firstOrCreate([
-            'sub_title' => 'Test SubCategory',
-            'category_id' => $category['id']
-        ]);
-
-        $budget = Budget::firstOrCreate([
-            'title' => 'Test Budget Title',
-            'category_id' => $category['id'],
-            'sub_category_id' => $subCategory['id'],
-            'user_id' => $user['id'],
-            'dedicated_amount' => 900.00,
-            'budget_for_month' => '2019-06-01'
-        ]);
+        $budget = $this->insertbudgetdata($user['id']);
 
         $budgetTracking = factory(BudgetTracking::class, 5)->create([
            'spender' => $user['id'],
@@ -58,28 +37,18 @@ class BudgetTrackingTest extends TestCase
         ]);
 
         $this->data = [
-            'category' => $category,
-            'sub_category' => $subCategory,
             'user' => $user,
             'budget' => $budget,
             'budgetTracking' => $budgetTracking->toArray()
         ];
     }
 
-    public function getResponse($method, $url, $token, $data = [])
-    {
-        return $this->withHeaders([
-            'Authorization' => "Bearer " . $token,
-        ])->json($method, $url, $data);
-    }
-
     public function testIndexMethod()
     {
-        $token = $this->data['user']['api_token'];
         $budgetId = $this->data['budget']['id'];
 
 
-        $response = $this->getResponse('GET', "api/v1/budget/{$budgetId}/tracking", $token);
+        $response = $this->get("api/v1/budget/{$budgetId}/tracking");
         $response->assertStatus(200);
     }
 
@@ -88,10 +57,8 @@ class BudgetTrackingTest extends TestCase
         $userId = $this->data['user']['id'];
         $budgetId = $this->data['budget']['id'];
         $data = factory(BudgetTracking::class)->make(['spender'=> $userId]);
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('POST', "api/v1/budget/{$budgetId}/tracking", $token, $data->toArray());
+        $response = $this->post("api/v1/budget/{$budgetId}/tracking", $data->toArray());
         $response->assertStatus(201);
     }
 
@@ -105,10 +72,8 @@ class BudgetTrackingTest extends TestCase
             'reason_for_spend' => 'Updated Reason for spend',
             'spender' => $userId
         ];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('PUT', "api/v1/budget/{$id}/tracking/{$trackingId}", $token, $data);
+        $response = $this->put("api/v1/budget/{$id}/tracking/{$trackingId}", $data);
         $response->assertStatus(200);
     }
 
@@ -116,10 +81,8 @@ class BudgetTrackingTest extends TestCase
     {
         $id = $this->data['budget']['id'];
         $trackingId = $this->data['budgetTracking'][0]['id'];
-        $token = $this->data['user']['api_token'];
 
-
-        $response = $this->getResponse('DELETE', "api/v1/budget/{$id}/tracking/{$trackingId}", $token);
+        $response = $this->delete("api/v1/budget/{$id}/tracking/{$trackingId}");
         $response->assertStatus(200);
     }
 }

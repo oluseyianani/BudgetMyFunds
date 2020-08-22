@@ -6,25 +6,27 @@ use Tests\TestCase;
 use App\Models\Goal;
 use App\Models\Role;
 use App\Models\User;
+use Tests\SetupHelper;
 use App\Models\GoalCategory;
 use App\Models\GoalTracking;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GoalTrackingTest extends TestCase
 {
-   use RefreshDatabase;
+   use RefreshDatabase, SetupHelper;
 
    public function setUp() :void
    {
         parent::setUp();
 
-        $role = Role::create([
-            'role' => 'Owner'
-        ]);
+        Artisan::call("passport:install");
 
-        $user = factory(User::class)->create();
-        $user->roles()->attach($role['id'], ['approved' => 1]);
+        $user = $this->createUserWithRole('Owner');
+
+        Passport::actingAs($user);
 
         $goalCategory = factory(GoalCategory::class)->create();
 
@@ -39,19 +41,12 @@ class GoalTrackingTest extends TestCase
         ];
    }
 
-   public function getResponse($method, $url, $token, $data = [])
-   {
-       return $this->withHeaders([
-           'Authorization' => "Bearer " . $token,
-       ])->json($method, $url, $data);
-   }
-
    public function testStoreMethod()
     {
         $goalId = $this->data['goal'][0]['id'];
-        $token = $this->data['user']['api_token'];
+
         $data = ['amount_contributed' => 456676];
-        $response = $this->getResponse('POST', "api/v1/goal/{$goalId}/tracking", $token, $data);
+        $response = $this->post("api/v1/goal/{$goalId}/tracking", $data);
         $response->assertStatus(201);
     }
 
@@ -60,23 +55,24 @@ class GoalTrackingTest extends TestCase
         $role = Role::firstOrCreate(['role' => 'Owner']);
         $anotherUser = factory(User::class)->create();
         $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
+
+        Passport::actingAs($anotherUser);
+
         $goalId = $this->data['goal'][0]['id'];
         $data = ['amount_contributed' => 456676];
 
 
-        $response = $this->getResponse('POST', "api/v1/goal/{$goalId}/tracking", $anotherUser['api_token'], $data);
+        $response = $this->post("api/v1/goal/{$goalId}/tracking", $data);
         $response->assertStatus(403);
     }
 
     public function testUpdateMethod()
     {
         $goalId = $this->data['goal'][0]['id'];
-        $token = $this->data['user']['api_token'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
         $data = ['amount_contributed' => 456676, 'date_contributed' => '2005-01-30 00:00:01'];
 
-
-        $response = $this->getResponse('PUT', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $token, $data);
+        $response = $this->put("api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $data);
         $response->assertStatus(200);
     }
 
@@ -85,23 +81,23 @@ class GoalTrackingTest extends TestCase
         $role = Role::firstOrCreate(['role' => 'Owner']);
         $anotherUser = factory(User::class)->create();
         $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
+
+        Passport::actingAs($anotherUser);
         $goalId = $this->data['goal'][0]['id'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
         $data = ['amount_contributed' => 456676, 'date_contributed' => '2005-01-30 00:00:01'];
 
 
-        $response = $this->getResponse('PUT', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $anotherUser['api_token'], $data);
+        $response = $this->put("api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $data);
         $response->assertStatus(403);
     }
 
     public function testDeleteMethod()
     {
         $goalId = $this->data['goal'][0]['id'];
-        $token = $this->data['user']['api_token'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
-
-
-        $response = $this->getResponse('DELETE', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $token);
+        
+        $response = $this->delete("api/v1/goal/{$goalId}/tracking/{$goalTrackingId}");
         $response->assertStatus(200);
     }
 
@@ -110,11 +106,12 @@ class GoalTrackingTest extends TestCase
         $role = Role::firstOrCreate(['role' => 'Owner']);
         $anotherUser = factory(User::class)->create();
         $anotherUser->roles()->attach($role['id'], ['approved' => 1]);
+
+        Passport::actingAs($anotherUser);
         $goalId = $this->data['goal'][0]['id'];
         $goalTrackingId = $this->data['goalTracking'][0]['id'];
 
-
-        $response = $this->getResponse('DELETE', "api/v1/goal/{$goalId}/tracking/{$goalTrackingId}", $anotherUser['api_token']);
+        $response = $this->delete("api/v1/goal/{$goalId}/tracking/{$goalTrackingId}");
         $response->assertStatus(403);
     }
 }
